@@ -1,0 +1,14 @@
+{
+  "name": "umbrella-gears",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "author": "subroh0508 <subroh.0508@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "esbuild": "^0.13.13"
+  },
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --outfile=bundle.js"
+  }
+}
