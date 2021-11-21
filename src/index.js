@@ -1,4 +1,5 @@
 import p5 from 'p5';
+import { UmbrellaGearsController } from "./UmbrellaGearsController";
 
 const drawGear = (p, n, r) => {
   let i = 0;
@@ -57,6 +58,16 @@ const sketch = (p) => {
     p.translate(277, 277);
     p.rotate(-p.frameCount / 10 + 44);
     drawGear(p, 20, 50);
+    p.pop();
+
+    const controller = new UmbrellaGearsController(
+        p,
+        [{ radius: 100, teethCount: 8 }],
+    );
+
+    p.push();
+    p.translate(300, 300);
+    controller.draw();
     p.pop();
   }
 };
