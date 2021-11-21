@@ -1,5 +1,5 @@
-import { TWO_PI } from 'p5';
-import { UmbrellaGear, RotateDirection } from './UmbrellaGear';
+import { RotateDirection } from './constants';
+import { UmbrellaGear } from './UmbrellaGear';
 
 export class UmbrellaGearController {
   p5 = null;
