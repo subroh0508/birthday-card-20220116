@@ -9,7 +9,8 @@
     "esbuild": "^0.13.13"
   },
   "scripts": {
-    "build": "esbuild src/index.js --bundle --outfile=bundle.js"
+    "build": "node ./build",
+    "dev": "node ./build --dev --serve"
   },
   "dependencies": {
     "p5": "^1.4.0"
