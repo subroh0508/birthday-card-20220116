@@ -5,17 +5,14 @@ const TEETH_HEIGHT_RATIO = 1.1;
 export class Gear {
   radius = 0;
   teethCount = 0;
-  color = null;
   direction = RotateDirection.STOP;
 
   constructor(
-      radius,
-      teethCount,
-      color,
+    radius,
+    teethCount,
   ) {
     this.radius = radius;
     this.teethCount = teethCount;
-    this.color = color;
   }
 
   diameter() { return this.radius * 2; }

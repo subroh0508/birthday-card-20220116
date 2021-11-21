@@ -3,32 +3,41 @@ import { Umbrella } from './Umbrella';
 
 export class UmbrellaController {
   p5 = null;
-  gear = null;
+  umbrella = null;
+  translateX = 0;
+  translateY = 0;
 
-  constructor(p5, { radius, boneCount }) {
+  constructor(p5, { radius, boneCount, translate = { x: 0, y: 0 } }) {
     this.p5 = p5;
-    this.gear = new Umbrella(radius, boneCount);
+    this.umbrella = new Umbrella(radius, boneCount);
+    this.translateX = translate.x;
+    this.translateY = translate.y;
   }
 
-  rotateLeft() { this.startRotation(RotateDirection.LEFT); }
-  rotateRight() { this.startRotation(RotateDirection.RIGHT); }
-  stopRotation() { this.startRotation(RotateDirection.STOP); }
+  set direction(direction) { this.umbrella.direction = direction; }
 
-  startRotation(direction) {
-    this.gear.direction = direction;
-    this.p5.rotate(this.gear.rotationAngle(this.p5.frameCount));
+  rotateLeft() { this.direction = RotateDirection.LEFT; }
+  rotateRight() { this.direction = RotateDirection.RIGHT; }
+  stopRotation() { this.direction = RotateDirection.STOP; }
+
+  set translate({ x, y }) {
+    this.translateX = x;
+    this.translateY = y;
   }
 
   draw() {
+    this.p5.translate(this.translateX, this.translateY);
+    this.p5.rotate(this.umbrella.rotationAngle(this.p5.frameCount));
+
     this.p5.stroke(255);
-    this.gear.covers(({ x1, y1, x2, y2, x3, y3 }) => {
+    this.umbrella.covers(({ x1, y1, x2, y2, x3, y3 }) => {
       this.p5.fill(255);
       this.p5.triangle(x1, y1, x2, y2, x3, y3);
     });
 
     this.p5.strokeWeight(2);
     this.p5.stroke(0);
-    this.gear.bones(({ x1, y1, x2, y2 }) => {
+    this.umbrella.bones(({ x1, y1, x2, y2 }) => {
       this.p5.line(x1, y1, x2, y2);
     });
 

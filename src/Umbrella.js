@@ -8,8 +8,8 @@ export class Umbrella {
   direction = RotateDirection.STOP; // (-1, 0, 1) = (right, stop, left)
 
   constructor(
-      radius,
-      teethCount,
+    radius,
+    teethCount,
   ) {
     this.radius = radius;
     this.boneCount = teethCount;
