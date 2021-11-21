@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "browser-sync": "^2.27.7",
     "esbuild": "^0.13.13"
   },
   "scripts": {
