@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { Gear } from './Gear';
-import { UmbrellaGearsController } from './UmbrellaGearsController';
+import { UmbrellasController } from './UmbrellasController';
 
 const drawGear = (p, n, r, color) => {
   const gear = new Gear(r, n, color);
@@ -57,9 +57,9 @@ const sketch = (p) => {
     drawGear(p, 20, 50, p.color(0, 255, 255))
     p.pop();
 
-    const controller = new UmbrellaGearsController(
+    const controller = new UmbrellasController(
         p,
-        [{ radius: 100, teethCount: 8 }],
+        [{ radius: 100, boneCount: 8 }],
     );
 
     p.push();
