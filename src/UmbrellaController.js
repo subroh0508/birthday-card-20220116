@@ -14,11 +14,13 @@ export class UmbrellaController {
     this.translateY = translate.y;
   }
 
+  get direction() { return this.umbrella.direction; }
   set direction(direction) { this.umbrella.direction = direction; }
 
-  rotateLeft() { this.direction = RotateDirection.LEFT; }
-  rotateRight() { this.direction = RotateDirection.RIGHT; }
-  stopRotation() { this.direction = RotateDirection.STOP; }
+  left() { this.direction = RotateDirection.LEFT; }
+  right() { this.direction = RotateDirection.RIGHT; }
+  stop() { this.direction = RotateDirection.STOP; }
+  isStopped() { return this.direction === RotateDirection.STOP; }
 
   set translate({ x, y }) {
     this.translateX = x;

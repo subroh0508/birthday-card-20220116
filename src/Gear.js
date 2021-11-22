@@ -1,6 +1,6 @@
 import { RotateDirection } from './constants';
 
-const TEETH_HEIGHT_RATIO = 1.1;
+const INNER_RADIUS_RATIO = 0.9;
 
 export class Gear {
   radius = 0;
@@ -26,7 +26,7 @@ export class Gear {
     [...Array(loopCount)].forEach((_, i) => {
       const start = Math.PI * 2 * (i / loopCount);
 
-      const radius = this.diameter() * (i % 2 === 0 ? TEETH_HEIGHT_RATIO : 1.0);
+      const radius = this.diameter() * (i % 2 === 0 ? INNER_RADIUS_RATIO : 1.0);
 
       callback({ start, end: start + rad, radius });
     });

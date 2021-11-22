@@ -16,11 +16,15 @@ export class GearController {
     this.translateY = translate.y;
   }
 
+  get radius() { return this.gear.radius; }
+
+  get direction() { return this.gear.direction; }
   set direction(direction) { this.gear.direction = direction; }
 
-  rotateLeft() { this.direction = RotateDirection.LEFT; }
-  rotateRight() { this.direction = RotateDirection.RIGHT; }
-  stopRotation() { this.direction = RotateDirection.STOP; }
+  left() { this.direction = RotateDirection.LEFT; }
+  right() { this.direction = RotateDirection.RIGHT; }
+  stop() { this.direction = RotateDirection.STOP; }
+  isStopped() { return this.direction === RotateDirection.STOP; }
 
   set translate({ x, y }) {
     this.translateX = x;
