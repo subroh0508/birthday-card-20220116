@@ -17,7 +17,7 @@ export class Circle extends CircleBehavior {
   diameter() { return this.radius * 2; }
 
   isPressed(mouseX, mouseY) {
-    const { x, y } = this.translate();
+    const { x, y } = this.translate;
     const distance = Math.sqrt(Math.pow(x - mouseX, 2) + Math.pow(y - mouseY, 2));
 
     return distance <= this.radius;

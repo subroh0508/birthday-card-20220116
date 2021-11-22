@@ -34,15 +34,15 @@ const sketch = (p) => {
   }
 
   p.mousePressed = () => {
-
+    canvas.mousePressed();
   }
 
   p.mouseDragged = () => {
-
+    canvas.mouseDragged();
   }
 
   p.mouseReleased = () => {
-
+    canvas.mouseReleased();
   }
 };
 
