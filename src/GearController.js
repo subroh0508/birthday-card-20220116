@@ -5,34 +5,17 @@ export class GearController {
   p5 = null;
   gear = null;
   color = null;
-  translateX = 0;
-  translateY = 0;
 
   constructor(p5, { radius, teethCount, color, translate = { x: 0, y: 0 } }) {
     this.p5 = p5;
-    this.gear = new Gear(radius, teethCount);
+    this.gear = new Gear(radius, teethCount, translate);
     this.color = p5.color(color);
-    this.translateX = translate.x;
-    this.translateY = translate.y;
-  }
-
-  get radius() { return this.gear.radius; }
-
-  get direction() { return this.gear.direction; }
-  set direction(direction) { this.gear.direction = direction; }
-
-  left() { this.direction = RotateDirection.LEFT; }
-  right() { this.direction = RotateDirection.RIGHT; }
-  stop() { this.direction = RotateDirection.STOP; }
-  isStopped() { return this.direction === RotateDirection.STOP; }
-
-  set translate({ x, y }) {
-    this.translateX = x;
-    this.translateY = y;
   }
 
   draw() {
-    this.p5.translate(this.translateX, this.translateY);
+    this.gear.rotateLeft();
+
+    this.p5.translate(this.gear.translateX, this.gear.translateY);
     this.p5.rotate(this.gear.rotationAngle(this.p5.frameCount));
 
     this.p5.stroke(this.color);

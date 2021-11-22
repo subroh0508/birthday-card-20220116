@@ -1,23 +1,19 @@
-import { RotateDirection } from './constants';
+import { Circle } from "./model/Circle";
 
 const INNER_RADIUS_RATIO = 0.9;
 
-export class Gear {
-  radius = 0;
+export class Gear extends Circle {
   teethCount = 0;
-  direction = RotateDirection.STOP;
 
   constructor(
     radius,
     teethCount,
+    translate = { x: 0, y: 0 },
   ) {
-    this.radius = radius;
+    super({ radius, translate });
+
     this.teethCount = teethCount;
   }
-
-  diameter() { return this.radius * 2; }
-
-  rotationAngle(frameCount) { return this.direction * (frameCount / 10); }
 
   arcs(callback) {
     const loopCount = this.teethCount * 2;

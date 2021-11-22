@@ -12,7 +12,6 @@ export class GearsController {
   draw() {
     this.gearControllers.forEach((gearController) => {
       this.p5.push();
-      gearController.rotateLeft();
       gearController.draw();
       this.p5.pop();
     });

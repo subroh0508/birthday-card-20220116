@@ -13,9 +13,9 @@ export const Rotatable = (Base) => class extends Base {
   get direction() { return this.direction; }
   set direction(direction) { this.direction = direction; }
 
-  left() { this.direction = RotateDirection.LEFT; }
-  right() { this.direction = RotateDirection.RIGHT; }
-  stop() { this.direction = RotateDirection.STOP; }
+  rotateLeft() { this.direction = RotateDirection.LEFT; }
+  rotateRight() { this.direction = RotateDirection.RIGHT; }
+  rotateStop() { this.direction = RotateDirection.STOP; }
   isStopped() { return this.direction === RotateDirection.STOP; }
 
   rotationAngle(frameCount) { return this.direction * (frameCount / 10); }

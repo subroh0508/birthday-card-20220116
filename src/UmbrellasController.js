@@ -12,7 +12,6 @@ export class UmbrellasController {
   draw() {
     this.umbrellaControllers.forEach((umbrellaController) => {
       this.p5.push();
-      umbrellaController.rotateLeft();
       umbrellaController.draw();
       this.p5.pop();
     });

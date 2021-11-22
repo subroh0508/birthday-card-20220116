@@ -1,23 +1,19 @@
-import { RotateDirection } from './constants';
+import { Circle } from "./model/Circle";
 
 const TEETH_HEIGHT_RATIO = 1.025;
 
-export class Umbrella {
-  radius = 0;
+export class Umbrella extends Circle {
   boneCount = 0;
-  direction = RotateDirection.STOP; // (-1, 0, 1) = (right, stop, left)
 
   constructor(
     radius,
     teethCount,
+    translate = { x: 0, y: 0 },
   ) {
-    this.radius = radius;
+    super({ radius, translate });
+
     this.boneCount = teethCount;
   }
-
-  diameter() { return this.radius * 2; }
-
-  rotationAngle(frameCount) { return this.direction * (frameCount / 100); }
 
   bones(callback) {
     [...Array(this.boneCount)].forEach((_, i) => {
