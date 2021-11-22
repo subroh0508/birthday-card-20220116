@@ -1,4 +1,4 @@
-import { Circle } from './model/Circle';
+import { Circle } from './abstract/Circle';
 
 const INNER_RADIUS_RATIO = 0.9;
 

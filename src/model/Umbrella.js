@@ -1,4 +1,4 @@
-import { Circle } from "./model/Circle";
+import { Circle } from './abstract/Circle';
 
 const TEETH_HEIGHT_RATIO = 1.025;
 

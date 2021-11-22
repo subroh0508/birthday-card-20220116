@@ -1,6 +1,6 @@
 import compose from 'lodash/fp/compose';
-import { Translatable } from './mixins/Translatable';
-import { Rotatable } from './mixins/Rotatable';
+import { Translatable } from '../mixins/Translatable';
+import { Rotatable } from '../mixins/Rotatable';
 import { P5Model } from './P5Model';
 
 const CircleBehavior = compose(Translatable, Rotatable)(P5Model);

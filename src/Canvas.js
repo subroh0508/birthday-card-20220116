@@ -1,6 +1,6 @@
 import { P5Controller } from './controller/P5Controller';
-import { Gear } from './Gear';
-import { Umbrella } from './Umbrella';
+import { Gear } from './model/Gear';
+import { Umbrella } from './model/Umbrella';
 
 export class Canvas extends P5Controller {
   gears = [];
@@ -18,18 +18,15 @@ export class Canvas extends P5Controller {
     this.umbrellas = umbrellas.map((umbrella) => new Umbrella(p5, umbrella));
   }
 
-  get objects() {
+  get target() {
     return [
       ...this.gears,
       ...this.umbrellas,
     ];
   }
 
-  draw() { this.objects.forEach((obj) => obj.draw()); }
-
   mousePressed() {
-    console.log(`mouse = (${this.mouseX}, ${this.mouseY})`);
-    this.draggedObj = this.objects.find(obj => obj.isPressed(this.mouseX, this.mouseY));
+    this.draggedObj = this.target.find(t => t.isPressed(this.mouseX, this.mouseY));
     this.draggedObj && this.draggedObj.pressed(this.mouseX, this.mouseY);
   }
 

@@ -1,5 +1,3 @@
-import {RotateDirection} from "./constants";
-
 const RELATED_DISTANCE_THRESHOLD = 1.0
 
 export class RotateController {
