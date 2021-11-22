@@ -11,7 +11,7 @@ const sketch = (p) => {
       { radius: 50, teethCount: 20, color: '#00FFFF', translate: { x: 277, y: 277 } },
     ],
     [
-      { radius: 100, boneCount: 8, translate: { x: 300, y: 300 } },
+      { radius: 100, boneCount: 8, color: '#FFFFFF', translate: { x: 300, y: 300 } },
     ],
   );
 

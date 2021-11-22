@@ -1,19 +1,17 @@
-export const Translatable = (Base) => class extends Base {
+export const Translatable = (P5Model) => class extends P5Model {
   translateX = 0;
   translateY = 0;
   pressedX = null;
   pressedY = null;
 
-  constructor(args) {
-    super(args);
+  constructor(p5, args) {
+    super(p5, args);
 
     const { translate } = args;
 
     this.translateX = translate && translate.x;
     this.translateY = translate && translate.y;
   }
-
-  get translate() { return { x: this.translateX, y: this.translateY }; }
 
   move(x, y) {
     this.translateX = x;

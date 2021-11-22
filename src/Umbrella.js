@@ -5,14 +5,32 @@ const TEETH_HEIGHT_RATIO = 1.025;
 export class Umbrella extends Circle {
   boneCount = 0;
 
-  constructor(
-    radius,
-    teethCount,
-    translate = { x: 0, y: 0 },
-  ) {
-    super({ radius, translate });
+  constructor(p5, args) {
+    super(p5, args);
 
-    this.boneCount = teethCount;
+    this.boneCount = args.boneCount;
+  }
+
+  drawBlock() {
+    this.rotateLeft();
+
+    this.translate(this.translateX, this.translateY);
+    this.rotate(this.rotationAngle);
+
+    this.stroke(this.backgroundColor);
+    this.covers(({ x1, y1, x2, y2, x3, y3 }) => {
+      this.fill(this.backgroundColor);
+      this.triangle(x1, y1, x2, y2, x3, y3);
+    });
+
+    this.strokeWeight(2);
+    this.stroke(0);
+    this.bones(({ x1, y1, x2, y2 }) => {
+      this.line(x1, y1, x2, y2);
+    });
+
+    this.fill(255);
+    this.circle(0, 0, 10);
   }
 
   bones(callback) {

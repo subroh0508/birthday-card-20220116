@@ -5,14 +5,26 @@ const INNER_RADIUS_RATIO = 0.9;
 export class Gear extends Circle {
   teethCount = 0;
 
-  constructor(
-    radius,
-    teethCount,
-    translate = { x: 0, y: 0 },
-  ) {
-    super({ radius, translate });
+  constructor(p5, args) {
+    super(p5, args);
 
-    this.teethCount = teethCount;
+    this.teethCount = args.teethCount;
+  }
+
+  drawBlock() {
+    this.rotateLeft();
+
+    this.translate(this.translateX, this.translateY);
+    this.rotate(this.rotationAngle);
+
+    this.stroke(this.backgroundColor);
+    this.arcs(({ start, end, radius }) => {
+      this.fill(this.backgroundColor);
+      this.arc(0, 0, radius, radius, start, end, this.PIE);
+    });
+
+    this.fill(255);
+    this.ellipse(0, 0, 10);
   }
 
   arcs(callback) {

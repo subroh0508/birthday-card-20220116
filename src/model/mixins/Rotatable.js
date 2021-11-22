@@ -1,10 +1,12 @@
 export const RotateDirection = { RIGHT: -1, STOP: 0, LEFT: 1 };
 
-export const Rotatable = (Base) => class extends Base {
+Object.freeze(RotateDirection);
+
+export const Rotatable = (P5Model) => class extends P5Model {
   direction = RotateDirection.STOP;
 
-  constructor(args) {
-    super(args);
+  constructor(p5, args) {
+    super(p5, args);
 
     const { direction } = args;
     this.direction = direction || RotateDirection.STOP;
@@ -18,5 +20,5 @@ export const Rotatable = (Base) => class extends Base {
   rotateStop() { this.direction = RotateDirection.STOP; }
   isStopped() { return this.direction === RotateDirection.STOP; }
 
-  rotationAngle(frameCount) { return this.direction * (frameCount / 10); }
+  get rotationAngle() { return this.direction * (this.frameCount / 10); }
 }
