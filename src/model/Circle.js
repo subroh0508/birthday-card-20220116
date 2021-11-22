@@ -1,6 +1,6 @@
 import compose from 'lodash/fp/compose';
-import { Translatable } from "./mixins/Translatable";
-import { Rotatable } from "./mixins/Rotatable";
+import { Translatable } from './mixins/Translatable';
+import { Rotatable } from './mixins/Rotatable';
 
 const CircleBehavior = compose(Translatable, Rotatable)(class {});
 
@@ -16,12 +16,10 @@ export class Circle extends CircleBehavior {
 
   diameter() { return this.radius * 2; }
 
-  pressed(mouseX, mouseY) {
+  isPressed(mouseX, mouseY) {
     const { x, y } = this.translate();
     const distance = Math.sqrt(Math.pow(x - mouseX, 2) + Math.pow(y - mouseY, 2));
 
-    if (distance <= this.radius) {
-      this.pressed();
-    }
+    return distance <= this.radius;
   }
 }

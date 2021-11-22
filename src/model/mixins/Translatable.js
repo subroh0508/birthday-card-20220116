@@ -1,7 +1,8 @@
 export const Translatable = (Base) => class extends Base {
   translateX = 0;
   translateY = 0;
-  dragged = false;
+  pressedX = null;
+  pressedY = null;
 
   constructor(args) {
     super(args);
@@ -19,14 +20,19 @@ export const Translatable = (Base) => class extends Base {
     this.translateY = y;
   }
 
-  pressed() { this.dragged = true; }
-  released() { this.dragged = false; }
+  pressed(mouseX, mouseY) {
+    this.pressedX = this.translateX - mouseX;
+    this.pressedY = this.translateY - mouseY;
+  }
+  release() { this.pressedX = this.pressedY = null; }
+
+  get dragged() { return this.pressedX != null && this.pressedY != null; }
 
   drag(x, y) {
     if (!this.dragged) {
       return;
     }
 
-    this.move(x, y);
+    this.move(x + this.pressedX, y + this.pressedY);
   }
 }

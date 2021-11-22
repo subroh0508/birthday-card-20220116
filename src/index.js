@@ -1,8 +1,20 @@
 import p5 from 'p5';
-import { UmbrellasController } from './UmbrellasController';
-import { GearsController } from './GearsController';
+import { Canvas } from './Canvas';
 
 const sketch = (p) => {
+  const canvas = new Canvas(
+    p,
+    [
+      { radius: 50, teethCount: 20, color: '#FF0000', translate: { x: 200, y: 200 } },
+      { radius: 50, teethCount: 20, color: '#00FF00', translate: { x: 92, y: 200 } },
+      { radius: 50, teethCount: 20, color: '#0000FF', translate: { x: 200, y: 92 } },
+      { radius: 50, teethCount: 20, color: '#00FFFF', translate: { x: 277, y: 277 } },
+    ],
+    [
+      { radius: 100, boneCount: 8, translate: { x: 300, y: 300 } },
+    ],
+  );
+
   p.preload = () => {
   };
 
@@ -18,23 +30,19 @@ const sketch = (p) => {
 
   p.draw = () => {
     p.background(100);
+    canvas.draw();
+  }
 
-    new GearsController(
-      p,
-      [
-        { radius: 50, teethCount: 20, color: '#FF0000', translate: { x: 200, y: 200 } },
-        { radius: 50, teethCount: 20, color: '#00FF00', translate: { x: 92, y: 200 } },
-        { radius: 50, teethCount: 20, color: '#0000FF', translate: { x: 200, y: 92 } },
-        { radius: 50, teethCount: 20, color: '#00FFFF', translate: { x: 277, y: 277 } },
-      ],
-    ).draw();
+  p.mousePressed = () => {
 
-    new UmbrellasController(
-      p,
-      [
-        { radius: 100, boneCount: 8, translate: { x: 300, y: 300 } },
-      ],
-    ).draw();
+  }
+
+  p.mouseDragged = () => {
+
+  }
+
+  p.mouseReleased = () => {
+
   }
 };
 
