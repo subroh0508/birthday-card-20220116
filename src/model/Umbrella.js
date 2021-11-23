@@ -16,42 +16,40 @@ export class Umbrella extends Circle {
     this.rotate(this.rotationAngle);
 
     this.stroke(this.backgroundColor);
-    this._covers(({ x1, y1, x2, y2, x3, y3 }) => {
+    _covers(this.radius, this.boneCount, ({ x1, y1, x2, y2, x3, y3 }) => {
       this.fill(this.backgroundColor);
       this.triangle(x1, y1, x2, y2, x3, y3);
     });
 
     this.strokeWeight(2);
     this.stroke(0);
-    this._bones(({ x1, y1, x2, y2 }) => {
+    _bones(this.radius, this.boneCount, ({ x1, y1, x2, y2 }) => {
       this.line(x1, y1, x2, y2);
     });
 
     this.fill(255);
     this.circle(0, 0, 10);
   }
-
-  _bones(callback) {
-    [...Array(this.boneCount)].forEach((_, i) => {
-      const x1 = Math.cos(Math.PI * 2 * (i / this.boneCount)) * this.radius * TEETH_HEIGHT_RATIO;
-      const y1 = Math.sin(Math.PI * 2 * (i / this.boneCount)) * this.radius * TEETH_HEIGHT_RATIO;
-
-      callback({ x1, y1, x2: 0, y2: 0 });
-    });
-  }
-
-  _covers(callback) {
-    const rad = Math.PI * 2 / this.boneCount;
-
-    [...Array(this.boneCount)].forEach((_, i) => {
-      const x2 = Math.cos(rad * i) * this.radius;
-      const y2 = Math.sin(rad * i) * this.radius;
-      const x3 = Math.cos(rad * (i + 1)) * this.radius;
-      const y3 = Math.sin(rad * (i + 1)) * this.radius;
-
-      callback({ x1: 0, y1: 0, x2, y2, x3, y3 });
-    });
-  }
 }
 
+const _bones = (radius, boneCount, callback) => {
+  [...Array(boneCount)].forEach((_, i) => {
+    const x1 = Math.cos(Math.PI * 2 * (i / boneCount)) * radius * TEETH_HEIGHT_RATIO;
+    const y1 = Math.sin(Math.PI * 2 * (i / boneCount)) * radius * TEETH_HEIGHT_RATIO;
 
+    callback({ x1, y1, x2: 0, y2: 0 });
+  });
+}
+
+const _covers = (radius, boneCount, callback) => {
+  const rad = Math.PI * 2 / boneCount;
+
+  [...Array(boneCount)].forEach((_, i) => {
+    const x2 = Math.cos(rad * i) * radius;
+    const y2 = Math.sin(rad * i) * radius;
+    const x3 = Math.cos(rad * (i + 1)) * radius;
+    const y3 = Math.sin(rad * (i + 1)) * radius;
+
+    callback({ x1: 0, y1: 0, x2, y2, x3, y3 });
+  });
+}

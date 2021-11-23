@@ -19,7 +19,7 @@ export class Gear extends Circle {
     this.rotate(this.rotationAngle);
 
     this.stroke(this.backgroundColor);
-    this._arcs(({ start, end, radius }) => {
+    _arcs(this.diameter(), this.teethCount, ({ start, end, radius }) => {
       this.fill(this.backgroundColor);
       this.arc(0, 0, radius, radius, start, end, this.PIE);
     });
@@ -27,17 +27,17 @@ export class Gear extends Circle {
     this.fill(255);
     this.ellipse(0, 0, 10);
   }
+}
 
-  _arcs(callback) {
-    const loopCount = this.teethCount * 2;
-    const rad = Math.PI * 2 / loopCount;
+const _arcs = (diameter, teethCount, callback) => {
+  const loopCount = teethCount * 2;
+  const rad = Math.PI * 2 / loopCount;
 
-    [...Array(loopCount)].forEach((_, i) => {
-      const start = Math.PI * 2 * (i / loopCount);
+  [...Array(loopCount)].forEach((_, i) => {
+    const start = Math.PI * 2 * (i / loopCount);
 
-      const radius = this.diameter() * (i % 2 === 0 ? INNER_RADIUS_RATIO : 1.0);
+    const radius = diameter * (i % 2 === 0 ? INNER_RADIUS_RATIO : 1.0);
 
-      callback({ start, end: start + rad, radius });
-    });
-  }
+    callback({ start, end: start + rad, radius });
+  });
 }
