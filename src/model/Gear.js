@@ -12,6 +12,7 @@ export class Gear extends Circle {
   }
 
   get innerRadius() { return this.radius * INNER_RADIUS_RATIO; }
+  get teethHeight() { return this.radius * (1 - INNER_RADIUS_RATIO); }
 
   drawBlock() {
     this.translate(this.translateX, this.translateY);

@@ -4,24 +4,14 @@ import { Circle } from '../../model/abstract/Circle';
 export const Collidable = (P5Controller) => class extends P5Controller {
   _adjancency = {};
 
-  collision(objA, objB) {
-    if (objA instanceof Gear && objB instanceof Gear) {
-      return objA.distance(objB) <= objA.innerRadius + objB.innerRadius;
-    }
-
-    if (objA instanceof Circle && objB instanceof Circle) {
-      return objA.distance(objB) <= objA.radius + objB.radius;
-    }
-
-    return false;
-  }
+  collision(obj) { return this.target.some((t) => obj.id !== t.id && _collision(obj, t)); }
 
   mousePressed() {
     super.mousePressed();
 
     this._adjancency = {};
     _combination(this.target, 2).forEach(([objA, objB]) => {
-      if (!this.collision(objA, objB)) {
+      if (!_collision(objA, objB)) {
         return;
       }
 
@@ -31,8 +21,6 @@ export const Collidable = (P5Controller) => class extends P5Controller {
       this._adjancency[objA.id] = [...listA, objB.id];
       this._adjancency[objB.id] = [...listB, objA.id];
     });
-    console.log('combination: ', _combination(this.target, 2));
-    console.log('_adjancency: ', JSON.stringify(this._adjancency));
   }
 
   mouseDragged() {
@@ -61,3 +49,15 @@ const _combination = (objects, k) => {
 
   return combination;
 };
+
+const _collision = (objA, objB) => {
+  if (objA instanceof Gear && objB instanceof Gear) {
+    return objA.distance(objB) <= objA.innerRadius + objB.innerRadius + (objA.teethHeight + objB.teethHeight) / 2;
+  }
+
+  if (objA instanceof Circle && objB instanceof Circle) {
+    return objA.distance(objB) <= objA.radius + objB.radius;
+  }
+
+  return false;
+}
