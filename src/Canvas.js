@@ -1,11 +1,11 @@
 import compose from 'lodash/fp/compose';
 import { P5Controller } from './controller/P5Controller';
-import { Collidable } from './controller/mixins/Collidable';
+import { Engageable } from './controller/mixins/Engageable';
 import { Gear } from './model/Gear';
 import { Umbrella } from './model/Umbrella';
 
 
-const CanvasBehavior = compose(Collidable)(P5Controller);
+const CanvasBehavior = compose(Engageable)(P5Controller);
 
 export class Canvas extends CanvasBehavior {
   gears = [];

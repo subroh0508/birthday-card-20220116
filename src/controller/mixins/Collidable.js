@@ -3,73 +3,48 @@ import { Circle } from '../../model/abstract/Circle';
 import { Draggable } from './Draggable';
 
 export const Collidable = (P5Controller) => class extends Draggable(P5Controller) {
-  _adjancency = {};
+  collision(objA, objB) {
+    if (objA instanceof Gear && objB instanceof Gear) {
+      return objA.distance(objB) <= objA.innerRadius + objB.innerRadius + (objA.teethHeight + objB.teethHeight) / 2;
+    }
 
-  collision(obj) { return this.target.some((t) => obj.id !== t.id && _collision(obj, t)); }
+    if (objA instanceof Circle && objB instanceof Circle) {
+      return objA.distance(objB) <= objA.radius + objB.radius;
+    }
 
-  mousePressed() {
-    super.mousePressed();
+    return false;
+  }
 
-    this._adjancency = {};
-    _combination(this.target, 2).forEach(([objA, objB]) => {
-      if (!_collision(objA, objB)) {
-        return;
-      }
+  get hasCollisionAfterDragged() { return Object.keys(this.collisionsAfterDragged).length !== 0; }
+  get collisionsAfterDragged() {
+    const afterDragged = this._objectAfterDragged;
+    if (!afterDragged) {
+      return [];
+    }
 
-      const listA = this._adjancency[objA.id] || [];
-      const listB = this._adjancency[objB.id] || [];
-
-      this._adjancency[objA.id] = [...listA, objB.id];
-      this._adjancency[objB.id] = [...listB, objA.id];
-    });
+    return Object.fromEntries(
+        this.target
+            .filter(t => afterDragged.id !== t.id && this.collision(afterDragged, t))
+            .map(t => [t.id, t]),
+    );
   }
 
   mouseDragged() {
-    if (this.collision(this.nextObj())) {
+    if (this.hasCollisionAfterDragged) {
       return;
     }
 
     super.mouseDragged();
   }
 
-  nextObj() {
+  get _objectAfterDragged() {
     if (!this.draggedObj) {
       return null;
     }
 
-    const obj = Object.create(this.draggedObj);
-    obj.drag(this.mouseX, this.mouseY);
+    const nextObj = Object.create(this.draggedObj);
+    nextObj.drag(this.mouseX, this.mouseY);
 
-    return obj;
+    return nextObj;
   }
-}
-
-const _combination = (objects, k) => {
-  if (objects.length < k) {
-    return [];
-  }
-
-  if (k === 1) {
-    return objects.map((obj) => [obj]);
-  }
-
-  let combination = [];
-  for (let i = 0; i <= objects.length - k; i++) {
-    const row = _combination(objects.slice(i + 1), k - 1);
-    combination = [...combination, ...row.map((r) => [objects[i], ...r])];
-  }
-
-  return combination;
-};
-
-const _collision = (objA, objB) => {
-  if (objA instanceof Gear && objB instanceof Gear) {
-    return objA.distance(objB) <= objA.innerRadius + objB.innerRadius + (objA.teethHeight + objB.teethHeight) / 2;
-  }
-
-  if (objA instanceof Circle && objB instanceof Circle) {
-    return objA.distance(objB) <= objA.radius + objB.radius;
-  }
-
-  return false;
 }
