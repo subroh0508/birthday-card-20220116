@@ -1,5 +1,4 @@
 import { Collidable } from './Collidable';
-import { RotateDirection } from '../../model/mixins/Rotatable';
 
 export const Engageable = (P5Controller) => class extends Collidable(P5Controller) {
   _adjancency = {};
@@ -19,16 +18,17 @@ export const Engageable = (P5Controller) => class extends Collidable(P5Controlle
       this._adjancency[objA.id] = [...listA, objB];
       this._adjancency[objB.id] = [...listB, objA];
     });
+    console.log(this._adjancency);
   }
 
   mouseDragged() {
-    this._changeRotation();
-
     super.mouseDragged();
+
+    this._changeRotation();
   }
 
   _changeRotation() {
-    const collisions = this.collisionsAfterDragged;
+    const collisions = this.collisions;
 
     const hasPower = this.draggedObj && this.draggedObj.hasPower;
     switch (hasPower) {
