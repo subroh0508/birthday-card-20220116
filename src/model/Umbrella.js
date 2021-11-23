@@ -12,20 +12,18 @@ export class Umbrella extends Circle {
   }
 
   drawBlock() {
-    this.rotateLeft();
-
     this.translate(this.translateX, this.translateY);
     this.rotate(this.rotationAngle);
 
     this.stroke(this.backgroundColor);
-    this.covers(({ x1, y1, x2, y2, x3, y3 }) => {
+    this._covers(({ x1, y1, x2, y2, x3, y3 }) => {
       this.fill(this.backgroundColor);
       this.triangle(x1, y1, x2, y2, x3, y3);
     });
 
     this.strokeWeight(2);
     this.stroke(0);
-    this.bones(({ x1, y1, x2, y2 }) => {
+    this._bones(({ x1, y1, x2, y2 }) => {
       this.line(x1, y1, x2, y2);
     });
 
@@ -33,7 +31,7 @@ export class Umbrella extends Circle {
     this.circle(0, 0, 10);
   }
 
-  bones(callback) {
+  _bones(callback) {
     [...Array(this.boneCount)].forEach((_, i) => {
       const x1 = Math.cos(Math.PI * 2 * (i / this.boneCount)) * this.radius * TEETH_HEIGHT_RATIO;
       const y1 = Math.sin(Math.PI * 2 * (i / this.boneCount)) * this.radius * TEETH_HEIGHT_RATIO;
@@ -42,7 +40,7 @@ export class Umbrella extends Circle {
     });
   }
 
-  covers(callback) {
+  _covers(callback) {
     const rad = Math.PI * 2 / this.boneCount;
 
     [...Array(this.boneCount)].forEach((_, i) => {

@@ -19,9 +19,28 @@ export class Circle extends CircleBehavior {
 
   diameter() { return this.radius * 2; }
 
-  isPressed(mouseX, mouseY) {
-    const distance = Math.sqrt(Math.pow(this.translateX - mouseX, 2) + Math.pow(this.translateY - mouseY, 2));
+  includes(mouseX, mouseY) {
+    return this.distance(mouseX, mouseY) <= this.radius;
+  }
 
-    return distance <= this.radius;
+  distance(...args) {
+    switch (args.length) {
+      case 1:
+        const model = args[0];
+        return this._distanceFromModel(model);
+      case 2:
+        const [x, y] = args;
+        return Math.sqrt(Math.pow(this.translateX - x, 2) + Math.pow(this.translateY - y, 2));
+      default:
+        return -1;
+    }
+  }
+
+  _distanceFromModel(model) {
+    if (model instanceof Circle) {
+      return this.distance(model.translateX, model.translateY);
+    }
+
+    return -1;
   }
 }

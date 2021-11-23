@@ -11,14 +11,14 @@ export class Gear extends Circle {
     this.teethCount = args.teethCount;
   }
 
-  drawBlock() {
-    this.rotateLeft();
+  get innerRadius() { return this.radius * INNER_RADIUS_RATIO; }
 
+  drawBlock() {
     this.translate(this.translateX, this.translateY);
     this.rotate(this.rotationAngle);
 
     this.stroke(this.backgroundColor);
-    this.arcs(({ start, end, radius }) => {
+    this._arcs(({ start, end, radius }) => {
       this.fill(this.backgroundColor);
       this.arc(0, 0, radius, radius, start, end, this.PIE);
     });
@@ -27,7 +27,7 @@ export class Gear extends Circle {
     this.ellipse(0, 0, 10);
   }
 
-  arcs(callback) {
+  _arcs(callback) {
     const loopCount = this.teethCount * 2;
     const rad = Math.PI * 2 / loopCount;
 

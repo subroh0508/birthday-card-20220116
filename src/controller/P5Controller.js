@@ -6,4 +6,8 @@ export class P5Controller {
   get target() { return []; }
 
   draw() { this.target.forEach((t) => t.draw()); }
+
+  mousePressed() {}
+  mouseDragged() {}
+  mouseReleased() {}
 }
