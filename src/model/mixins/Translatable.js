@@ -19,8 +19,8 @@ export const Translatable = (P5Model) => class extends P5Model {
   }
 
   pressed(mouseX, mouseY) {
-    this.pressedX = this.translateX - mouseX;
-    this.pressedY = this.translateY - mouseY;
+    this.pressedX = mouseX - this.translateX;
+    this.pressedY = mouseY - this.translateY;
   }
   release() { this.pressedX = this.pressedY = null; }
 
@@ -31,6 +31,6 @@ export const Translatable = (P5Model) => class extends P5Model {
       return;
     }
 
-    this.move(x + this.pressedX, y + this.pressedY);
+    this.move(x - this.pressedX, y - this.pressedY);
   }
 }
