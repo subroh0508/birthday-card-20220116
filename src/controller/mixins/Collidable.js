@@ -1,7 +1,8 @@
 import { Gear } from '../../model/Gear';
 import { Circle } from '../../model/abstract/Circle';
+import { Draggable } from './Draggable';
 
-export const Collidable = (P5Controller) => class extends P5Controller {
+export const Collidable = (P5Controller) => class extends Draggable(P5Controller) {
   _adjancency = {};
 
   collision(obj) { return this.target.some((t) => obj.id !== t.id && _collision(obj, t)); }
@@ -24,11 +25,22 @@ export const Collidable = (P5Controller) => class extends P5Controller {
   }
 
   mouseDragged() {
+    if (this.collision(this.nextObj())) {
+      return;
+    }
+
     super.mouseDragged();
   }
 
-  mouseReleased() {
-    super.mouseReleased();
+  nextObj() {
+    if (!this.draggedObj) {
+      return null;
+    }
+
+    const obj = Object.create(this.draggedObj);
+    obj.drag(this.mouseX, this.mouseY);
+
+    return obj;
   }
 }
 

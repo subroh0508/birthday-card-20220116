@@ -1,6 +1,4 @@
-import { Collidable } from './Collidable';
-
-export const Draggable = (P5Controller) => class extends Collidable(P5Controller) {
+export const Draggable = (P5Controller) => class extends P5Controller {
   draggedObj = null;
 
   mousePressed() {
@@ -12,7 +10,7 @@ export const Draggable = (P5Controller) => class extends Collidable(P5Controller
   mouseDragged() {
     super.mouseDragged();
 
-    if (!this.draggedObj || this.collision(this._nextObj())) {
+    if (!this.draggedObj) {
       return;
     }
 
@@ -23,12 +21,5 @@ export const Draggable = (P5Controller) => class extends Collidable(P5Controller
     super.mouseReleased();
     this.draggedObj && this.draggedObj.release();
     this.draggedObj = null;
-  }
-
-  _nextObj() {
-    const obj = Object.create(this.draggedObj);
-    obj.drag(this.mouseX, this.mouseY);
-
-    return obj;
   }
 }
