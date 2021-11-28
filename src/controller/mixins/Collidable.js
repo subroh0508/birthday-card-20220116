@@ -9,7 +9,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
 
   mouseDragged() {
     if (this._isColliding) {
-      this._moveAvoidingObject(this.collisions());
+      this._moveAvoidingObject();
       return;
     }
 
@@ -24,11 +24,12 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
   get _isColliding() { return this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
   get _willCollide() { return !this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
 
-  _moveAvoidingObject(collisions) {
+  _moveAvoidingObject() {
     if (!this.draggedObj) {
       return;
     }
 
+    const collisions = this.collisions();
     const collision = Object.values(collisions)[0];
 
     const threshold = Math.pow(_calcDistanceThreshold(collision, this.draggedObj), 2);
@@ -53,12 +54,12 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
       this.draggedObj.pressed(this.mouseX, this.mouseY);
       this.draggedObj.move(next.x, next.y);
     } else {
+      // TODO 座標を返すメソッドに変える
       this._backToTangentPoint(collisions);
     }
   }
 
-  _
-
+  // TODO 引数なくせるように
   _backToTangentPoint(collisions) {
     if (!this.draggedObj) {
       return;
