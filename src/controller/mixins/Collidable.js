@@ -58,7 +58,12 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const next =  (d1 < threshold || d1 < d2) ? { x, y } : { x: this.mouseX, y: this.mouseY };
     console.log(next)
 
-    this.draggedObj.move(next.x, next.y);
+    if (d1 < threshold || d1 < d2) {
+      this.draggedObj.pressed(this.mouseX, this.mouseY);
+      this.draggedObj.move(next.x, next.y);
+    } else {
+      this._backToTangentPoint(collisions);
+    }
   }
 
   _backToTangentPoint(collisions) {
@@ -74,21 +79,30 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const nextX = this.mouseX - this.draggedObj.pressedX;
     const nextY = this.mouseY - this.draggedObj.pressedY;
 
-    const nextMoveAmountX = nextX - this.draggedObj.translateX;
-    const nextMoveAmountY = nextY - this.draggedObj.translateY;
+    const nextDistanceX = nextX - collision.translateX;
+    const nextDistanceY = nextY - collision.translateY;
+
+    const nextDistance = Math.sqrt(nextDistanceX * nextDistanceX + nextDistanceY * nextDistanceY);
+
+    const threshold = _calcDistanceThreshold(collision, this.draggedObj);
+
+    if (threshold < nextDistance) {
+      super.mouseDragged();
+      return;
+    }
 
     const nowDistanceX = collision.translateX - this.draggedObj.translateX;
     const nowDistanceY = collision.translateY - this.draggedObj.translateY;
 
-    const nextMove = Math.sqrt(nextMoveAmountX * nextMoveAmountX + nextMoveAmountY * nextMoveAmountY);
     const nowDistance = Math.sqrt(nowDistanceX * nowDistanceX + nowDistanceY * nowDistanceY);
 
-    const backAmount = _calcDistanceThreshold(collision, this.draggedObj) - (nowDistance - nextMove)
-    const theta = Math.asin(nextMoveAmountX / nextMove)
+    const backAmount = nowDistance - threshold;
+    const theta = Math.asin(nowDistanceX / nowDistance);
 
-    const x = nextX - backAmount * Math.cos(theta)
-    const y = nextY - backAmount * Math.sin(theta)
-    console.log('will collide', x, y, nextMove)
+    const x = this.draggedObj.translateX + backAmount * Math.cos(theta);
+    const y = this.draggedObj.translateY + backAmount * Math.sin(theta);
+    console.log('will collide', x, y, backAmount);
+    this.draggedObj.pressed(this.mouseX, this.mouseY);
     this.draggedObj.move(x, y);
   }
 
@@ -158,11 +172,11 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
 
 const _collision = (objA, objB) => {
   if (objA instanceof Gear && objB instanceof Gear) {
-    return objA.distance(objB) <= _calcDistanceThreshold(objA, objB);
+    return Math.trunc(objA.distance(objB)) <= Math.trunc(_calcDistanceThreshold(objA, objB));
   }
 
   if (objA instanceof Circle && objB instanceof Circle) {
-    return objA.distance(objB) <= _calcDistanceThreshold(objA, objB);
+    return Math.trunc(objA.distance(objB)) <= Math.trunc(_calcDistanceThreshold(objA, objB));
   }
 
   return false;
