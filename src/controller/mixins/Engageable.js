@@ -28,7 +28,7 @@ export const Engageable = (P5Controller) => class extends Collidable(P5Controlle
   }
 
   _changeRotation() {
-    const collisions = this.collisions;
+    const collisions = this.collisions();
 
     const hasPower = this.draggedObj && this.draggedObj.hasPower;
     switch (hasPower) {

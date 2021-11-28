@@ -5,33 +5,33 @@ import { Draggable } from './Draggable';
 export const Collidable = (P5Controller) => class extends Draggable(P5Controller) {
   collision(objA, objB) { return _collision(objA, objB); }
 
-  get collisions() { return _getCollisions(this.draggedObj, this.target); }
+  collisions(point = null) { return _getCollisions(this.draggedObj, this.target, point); }
 
   mouseDragged() {
     if (this._isCollidingAndCannotMove) {
-      this._moveAvoidingObject(this.collisions);
+      this._moveAvoidingObject(this.collisions());
       //const { x, y } = this._calcTangentPoint(this.collisions);
       //this.draggedObj.move(x, y);
       return;
     }
 
     if (this._isCollidingAndCanMove) {
-      this._moveAvoidingObject(this.collisions);
+      this._moveAvoidingObject(this.collisions());
       return;
     }
 
     // TODO 回り込み移動中に一瞬オブジェクトから離れた直後のwillCollideブロックどうするか
     if (this._willCollide) {
-      this._backToTangentPoint(this._collisionsAfterDragged);
+      this._backToTangentPoint(this.collisions(this._afterDraggedPosition));
       return;
     }
 
     super.mouseDragged();
   }
 
-  get _isCollidingAndCannotMove() { return this._hasCollision && this._hasCollisionAfterDragged; }
-  get _isCollidingAndCanMove() { return this._hasCollision && !this._hasCollisionAfterDragged; }
-  get _willCollide() { return !this._hasCollision && this._hasCollisionAfterDragged; }
+  get _isCollidingAndCannotMove() { return this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
+  get _isCollidingAndCanMove() { return this._hasCollision() && !this._hasCollision(this._afterDraggedPosition); }
+  get _willCollide() { return !this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
 
   _moveAvoidingObject(collisions) {
     if (!this.draggedObj) {
@@ -153,30 +153,23 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     return { x, y };
   }
 
-  get _objectAfterDragged() {
-    if (!this.draggedObj) {
-      return null;
-    }
+  _hasCollision(point = null) { return Object.keys(this.collisions(point)).length !== 0; }
 
-    const nextObj = Object.create(this.draggedObj);
-    nextObj.drag(this.mouseX, this.mouseY);
-
-    return nextObj;
-  }
-
-  get _collisionsAfterDragged() { return _getCollisions(this._objectAfterDragged, this.target); }
-
-  get _hasCollision() { return Object.keys(this.collisions).length !== 0; }
-  get _hasCollisionAfterDragged() { return Object.keys(this._collisionsAfterDragged).length !== 0; }
+  get _afterDraggedPosition() { return { x: this._afterDraggedX, y: this._afterDraggedY }; }
+  get _afterDraggedX() { return this.mouseX - this.draggedObj.pressedX; }
+  get _afterDraggedY() { return this.mouseY - this.draggedObj.pressedY; }
 }
 
-const _collision = (objA, objB) => {
-  if (objA instanceof Gear && objB instanceof Gear) {
-    return Math.trunc(objA.distance(objB)) <= Math.trunc(_calcDistanceThreshold(objA, objB));
+const _collision = (obj, target, point = null) => {
+  const x = !point ? obj.translateX : point.x;
+  const y = !point ? obj.translateY : point.y;
+
+  if (obj instanceof Gear && target instanceof Gear) {
+    return Math.trunc(target.distance(x, y)) <= Math.trunc(_calcDistanceThreshold(obj, target));
   }
 
-  if (objA instanceof Circle && objB instanceof Circle) {
-    return Math.trunc(objA.distance(objB)) <= Math.trunc(_calcDistanceThreshold(objA, objB));
+  if (obj instanceof Circle && target instanceof Circle) {
+    return Math.trunc(target.distance(x, y)) <= Math.trunc(_calcDistanceThreshold(obj, target));
   }
 
   return false;
@@ -194,13 +187,13 @@ const _calcDistanceThreshold = (objA, objB) => {
   return Infinity
 }
 
-const _getCollisions = (obj, target) => {
+const _getCollisions = (obj, target, point = null) => {
   if (!obj) {
     return {};
   }
 
   return Object.fromEntries(
-      target.filter(t => obj.id !== t.id && _collision(obj, t))
+      target.filter(t => obj.id !== t.id && _collision(obj, t, point))
           .map(t => [t.id, t]),
   );
 }
