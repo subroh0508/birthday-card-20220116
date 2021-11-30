@@ -3,6 +3,8 @@ import { Circle } from '../../model/abstract/Circle';
 import { Draggable } from './Draggable';
 
 export const Collidable = (P5Controller) => class extends Draggable(P5Controller) {
+  _ref = null;
+
   collision(objA, objB) { return _collision(objA, objB); }
 
   collisions(point = null) { return _getCollisions(this.draggedObj, this.target, point); }
@@ -19,6 +21,16 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     }
 
     super.mouseDragged();
+  }
+
+  mousePressed() {
+    super.mousePressed();
+    this._ref = { x: this.mouseX, y: this.mouseY };
+  }
+
+  mouseReleased() {
+    super.mouseReleased();
+    this._ref = null;
   }
 
   get _isColliding() { return this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
@@ -92,7 +104,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
 
     const x = this.draggedObj.translateX + backAmount * Math.cos(theta);
     const y = this.draggedObj.translateY + backAmount * Math.sin(theta);
-    console.log('will collide', x, y, backAmount);
+
     this.draggedObj.pressed(this.mouseX, this.mouseY);
     this.draggedObj.move(x, y);
   }
@@ -107,44 +119,38 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
       return;
     }
 
-    // pressedX - translateX / pressedY - translateYの符号がdrag中の方向になる？
-    // 衝突時の絶対座標 = (this.draggedObj.translateX + this.draggedObj.pressedX, this.draggedObj.translateY + this.draggedObj.pressedY)
-
     const dx = this.movedX;
     const dy = this.movedY;
 
-    const signX = Math.sign(this.mouseX - (this.draggedObj.translateX + this.draggedObj.pressedX));
-    const signY = Math.sign(this.mouseY - (this.draggedObj.translateY + this.draggedObj.pressedY));
-
     const distanceX = collision.translateX - this.draggedObj.translateX;
     const distanceY = collision.translateY - this.draggedObj.translateY;
-    /*
-    const distanceX = signX * Math.abs(collision.translateX - this.draggedObj.translateX);
-    const distanceY = signY * Math.abs(collision.translateY - this.draggedObj.translateY);
-    */
 
     const movement = dx * dx + dy * dy;
 
-    //const distance = distanceX * distanceX + distanceY * distanceY;
     const distance = Math.pow(_calcDistanceThreshold(collision, this.draggedObj), 2);
-    const theta = Math.atan(distanceY / distanceX) + (Math.PI / 2 - Math.asin(movement / (distance * 2)));
+    const theta = Math.atan(distanceY / distanceX) + this._wrapDirection(collision) * (Math.PI / 2 - Math.asin(movement / (distance * 2)));
 
     const x = Math.sqrt(movement) * Math.cos(theta) + this.draggedObj.translateX;
     const y = Math.sqrt(movement) * Math.sin(theta) + this.draggedObj.translateY;
 
-    const nextDistance = Math.pow(collision.translateX - x, 2) + Math.pow(collision.translateY - y, 2)
-    console.log(Math.sqrt(distance), Math.sqrt(nextDistance))
-    if (nextDistance < distance) {
-      console.log(`aaa init: (x, y) = (${this.draggedObj.translateX}, ${this.draggedObj.translateY})`);
-      console.log(`aaa move: (x, y) = (${this.movedX}, ${this.movedY})`);
-      console.log(`(signX, signY) = (${signX}, ${signY}) / (${this.mouseX} - ${this.draggedObj.pressedX}, ${this.mouseY} - ${this.draggedObj.pressedY})`);
-      console.log(`(dx, dy, move) = (${dx}, ${dy}, ${movement})`);
-      console.log(`aaa result: (x, y) = (${movement * Math.cos(theta)}, ${movement * Math.sin(theta)})`);
-    }
     return { x, y };
   }
 
   _hasCollision(point = null) { return Object.keys(this.collisions(point)).length !== 0; }
+  _wrapDirection(collision) {
+    if (!this._ref) {
+      return 1;
+    }
+
+    const dx = this.mouseX - this._ref.x;
+    const dy = this.mouseY - this._ref.y;
+
+    if (Math.abs(dx) <= Math.abs(dy)) {
+      return dy < 0 ? -1 : 1;
+    }
+
+    return (this._ref.y - collision.translateY) < 0 ? -1 : 1;
+  }
 
   get _afterDraggedPosition() { return { x: this._afterDraggedX, y: this._afterDraggedY }; }
   get _afterDraggedX() { return this.mouseX - (!this.draggedObj ? 0 : this.draggedObj.pressedX); }
