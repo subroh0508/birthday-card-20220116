@@ -58,9 +58,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
 
     const d2 = d2X * d2X + d2Y * d2Y;
 
-    console.log(`d1, d2, threshold = ${d1}, ${d2}, ${threshold}`);
     const next =  (d1 < threshold || d1 < d2) ? { x, y } : { x: this.mouseX, y: this.mouseY };
-    console.log(next)
 
     if (d1 < threshold || d1 < d2) {
       this.draggedObj.pressed(this.mouseX, this.mouseY);
