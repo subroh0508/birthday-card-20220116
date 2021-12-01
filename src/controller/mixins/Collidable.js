@@ -16,7 +16,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     }
 
     if (this._willCollide) {
-      this._backToTangentPoint(this.collisions(this._afterDraggedPosition));
+      this._backToTangentPoint();
       return;
     }
 
@@ -44,111 +44,54 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const collisions = this.collisions();
     const collision = Object.values(collisions)[0];
 
-    const threshold = Math.pow(_calcDistanceThreshold(collision, this.draggedObj), 2);
+    const threshold = Math.pow(_calcDistanceThreshold(this.draggedObj, collision), 2);
 
     const d1X = collision.translateX - this._afterDraggedX;
     const d1Y = collision.translateY - this._afterDraggedY;
 
     const d1 = d1X * d1X + d1Y * d1Y;
 
-    const { x, y } = this._calcTangentPoint(collisions);
+    const wrapDirection = _calcWrapDirection(collision, this._ref, this.mouseX, this.mouseY);
+    const { x, y } = _calcWrapAroundPoint(this.draggedObj, collision, this.movedX, this.movedY, wrapDirection);
 
     const d2X = collision.translateX - x;
     const d2Y = collision.translateY - y;
 
     const d2 = d2X * d2X + d2Y * d2Y;
 
-    const next =  (d1 < threshold || d1 < d2) ? { x, y } : { x: this.mouseX, y: this.mouseY };
+    const next = (d1 < threshold || d1 < d2) ?
+      { x, y } :
+      _calcTangentPoint(this.draggedObj, collision, this._afterDraggedX, this._afterDraggedY);
 
-    if (d1 < threshold || d1 < d2) {
-      this.draggedObj.pressed(this.mouseX, this.mouseY);
-      this.draggedObj.move(next.x, next.y);
-    } else {
-      // TODO 座標を返すメソッドに変える
-      this._backToTangentPoint(collisions);
-    }
-  }
-
-  // TODO 引数なくせるように
-  _backToTangentPoint(collisions) {
-    if (!this.draggedObj) {
-      return;
-    }
-
-    const collision = Object.values(collisions)[0];
-    if (!collision) {
-      return;
-    }
-
-    const nextDistanceX = this._afterDraggedX - collision.translateX;
-    const nextDistanceY = this._afterDraggedY - collision.translateY;
-
-    const nextDistance = Math.sqrt(nextDistanceX * nextDistanceX + nextDistanceY * nextDistanceY);
-
-    const threshold = _calcDistanceThreshold(collision, this.draggedObj);
-
-    if (threshold < nextDistance) {
+    if (!next) {
       super.mouseDragged();
       return;
     }
 
-    const nowDistanceX = collision.translateX - this.draggedObj.translateX;
-    const nowDistanceY = collision.translateY - this.draggedObj.translateY;
-
-    const nowDistance = Math.sqrt(nowDistanceX * nowDistanceX + nowDistanceY * nowDistanceY);
-
-    const backAmount = nowDistance - threshold;
-    const theta = Math.asin(nowDistanceX / nowDistance);
-
-    const x = this.draggedObj.translateX + backAmount * Math.cos(theta);
-    const y = this.draggedObj.translateY + backAmount * Math.sin(theta);
-
     this.draggedObj.pressed(this.mouseX, this.mouseY);
-    this.draggedObj.move(x, y);
+    this.draggedObj.move(next.x, next.y);
   }
 
-  _calcTangentPoint(collisions) {
+  _backToTangentPoint() {
     if (!this.draggedObj) {
       return;
     }
 
+    const collisions = this.collisions(this._afterDraggedPosition);
     const collision = Object.values(collisions)[0];
-    if (!collision) {
-      return;
+
+    const tangentPoint = _calcTangentPoint(this.draggedObj, collision, this._afterDraggedX, this._afterDraggedY);
+
+    if (!tangentPoint) {
+      super.mouseDragged();
+      return
     }
 
-    const dx = this.movedX;
-    const dy = this.movedY;
-
-    const distanceX = collision.translateX - this.draggedObj.translateX;
-    const distanceY = collision.translateY - this.draggedObj.translateY;
-
-    const movement = dx * dx + dy * dy;
-
-    const distance = Math.pow(_calcDistanceThreshold(collision, this.draggedObj), 2);
-    const theta = Math.atan(distanceY / distanceX) + this._wrapDirection(collision) * (Math.PI / 2 - Math.asin(movement / (distance * 2)));
-
-    const x = Math.sqrt(movement) * Math.cos(theta) + this.draggedObj.translateX;
-    const y = Math.sqrt(movement) * Math.sin(theta) + this.draggedObj.translateY;
-
-    return { x, y };
+    this.draggedObj.pressed(this.mouseX, this.mouseY);
+    this.draggedObj.move(tangentPoint.x, tangentPoint.y);
   }
 
   _hasCollision(point = null) { return Object.keys(this.collisions(point)).length !== 0; }
-  _wrapDirection(collision) {
-    if (!this._ref) {
-      return 1;
-    }
-
-    const dx = this.mouseX - this._ref.x;
-    const dy = this.mouseY - this._ref.y;
-
-    if (Math.abs(dx) <= Math.abs(dy)) {
-      return dy < 0 ? -1 : 1;
-    }
-
-    return (this._ref.y - collision.translateY) < 0 ? -1 : 1;
-  }
 
   get _afterDraggedPosition() { return { x: this._afterDraggedX, y: this._afterDraggedY }; }
   get _afterDraggedX() { return this.mouseX - (!this.draggedObj ? 0 : this.draggedObj.pressedX); }
@@ -170,6 +113,17 @@ const _collision = (obj, target, point = null) => {
   return false;
 }
 
+const _getCollisions = (obj, target, point = null) => {
+  if (!obj) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    target.filter(t => obj.id !== t.id && _collision(obj, t, point))
+      .map(t => [t.id, t]),
+  );
+}
+
 const _calcDistanceThreshold = (objA, objB) => {
   if (objA instanceof Gear && objB instanceof Gear) {
     return objA.innerRadius + objB.innerRadius + (objA.teethHeight + objB.teethHeight) / 2;
@@ -182,13 +136,58 @@ const _calcDistanceThreshold = (objA, objB) => {
   return Infinity
 }
 
-const _getCollisions = (obj, target, point = null) => {
-  if (!obj) {
-    return {};
+const _calcTangentPoint = (draggedObj, collision, nextX, nextY) => {
+  const nextDistanceX = nextX - collision.translateX;
+  const nextDistanceY = nextY - collision.translateY;
+
+  const nextDistance = Math.sqrt(nextDistanceX * nextDistanceX + nextDistanceY * nextDistanceY);
+
+  const threshold = _calcDistanceThreshold(draggedObj, collision);
+
+  if (threshold < nextDistance) {
+    return null;
   }
 
-  return Object.fromEntries(
-      target.filter(t => obj.id !== t.id && _collision(obj, t, point))
-          .map(t => [t.id, t]),
-  );
+  const nowDistanceX = collision.translateX - draggedObj.translateX;
+  const nowDistanceY = collision.translateY - draggedObj.translateY;
+
+  const nowDistance = Math.sqrt(nowDistanceX * nowDistanceX + nowDistanceY * nowDistanceY);
+
+  const backAmount = nowDistance - threshold;
+  const theta = Math.asin(nowDistanceX / nowDistance);
+
+  const x = draggedObj.translateX + backAmount * Math.cos(theta);
+  const y = draggedObj.translateY + backAmount * Math.sin(theta);
+
+  return { x, y };
+}
+
+const _calcWrapDirection = (collision, ref, mouseX, mouseY) => {
+  if (!ref) {
+    return 1;
+  }
+
+  const dx = mouseX - ref.x;
+  const dy = mouseY - ref.y;
+
+  if (Math.abs(dx) <= Math.abs(dy)) {
+    return dy < 0 ? -1 : 1;
+  }
+
+  return (ref.y - collision.translateY) < 0 ? -1 : 1;
+}
+
+const _calcWrapAroundPoint = (draggedObj, collision, dx, dy, wrapDirection) => {
+  const distanceX = collision.translateX - draggedObj.translateX;
+  const distanceY = collision.translateY - draggedObj.translateY;
+
+  const movement = dx * dx + dy * dy;
+
+  const distance = Math.pow(_calcDistanceThreshold(collision, draggedObj), 2);
+  const theta = Math.atan(distanceY / distanceX) + wrapDirection * (Math.PI / 2 - Math.asin(movement / (distance * 2)));
+
+  const x = Math.sqrt(movement) * Math.cos(theta) + draggedObj.translateX;
+  const y = Math.sqrt(movement) * Math.sin(theta) + draggedObj.translateY;
+
+  return { x, y };
 }
