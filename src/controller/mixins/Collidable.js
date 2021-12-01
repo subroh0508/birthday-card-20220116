@@ -10,13 +10,25 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
   collisions(point = null) { return _getCollisions(this.draggedObj, this.target, point); }
 
   mouseDragged() {
+    if (!this.draggedObj) {
+      return;
+    }
+
+    const collisions = this.collisions();
+    const nextCollisions = this.collisions(this._afterDraggedPosition);
+
+    if (Object.keys(nextCollisions).length === 2) {
+      this._moveBothCollidingPoint(this.draggedObj, nextCollisions);
+      return;
+    }
+
     if (this._isColliding) {
-      this._moveAvoidingObject();
+      this._moveAvoidingObject(this.draggedObj, collisions);
       return;
     }
 
     if (this._willCollide) {
-      this._backToTangentPoint();
+      this._backToTangentPoint(this.draggedObj, nextCollisions);
       return;
     }
 
@@ -36,15 +48,32 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
   get _isColliding() { return this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
   get _willCollide() { return !this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
 
-  _moveAvoidingObject() {
-    if (!this.draggedObj) {
-      return;
-    }
+  // 特定の並びの時のみうまくハマる
+  _moveBothCollidingPoint(draggedObj, collisions) {
+    const collision1 = Object.values(collisions)[0];
+    const collision2 = Object.values(collisions)[1];
 
-    const collisions = this.collisions();
+    const a = collision1.distance(collision2);
+    const b = _calcDistanceThreshold(collision1, draggedObj);
+    const c = _calcDistanceThreshold(draggedObj, collision2);
+
+    const angleB = Math.acos((c * c + a * a - b * b) / (2 * c * a));
+    const theta = Math.acos((collision1.translateX - collision2.translateX) / a) - angleB
+
+    const x = c * Math.cos(theta) + collision2.translateX;
+    const y = c * Math.sin(theta) + collision2.translateY;
+
+    console.log(collision1.translateX, collision1.translateY);
+    console.log(collision2.translateX, collision2.translateY);
+    console.log(x, y);
+    draggedObj.pressed(this.mouseX, this.mouseY);
+    draggedObj.move(x, y);
+  }
+
+  _moveAvoidingObject(draggedObj, collisions) {
     const collision = Object.values(collisions)[0];
 
-    const threshold = _calcDistanceThreshold(this.draggedObj, collision);
+    const threshold = _calcDistanceThreshold(draggedObj, collision);
 
     const d1X = collision.translateX - this._afterDraggedX;
     const d1Y = collision.translateY - this._afterDraggedY;
@@ -52,7 +81,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const d1 = d1X * d1X + d1Y * d1Y;
 
     const wrapDirection = _calcWrapDirection(collision, this._ref, this.mouseX, this.mouseY);
-    const { x, y } = _calcWrapAroundPoint(this.draggedObj, collision, this.movedX, this.movedY, wrapDirection);
+    const { x, y } = _calcWrapAroundPoint(draggedObj, collision, this.movedX, this.movedY, wrapDirection);
 
     const d2X = collision.translateX - x;
     const d2Y = collision.translateY - y;
@@ -60,35 +89,30 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const d2 = d2X * d2X + d2Y * d2Y;
 
     if (d1 < threshold * threshold || d1 < d2) {
-      this.draggedObj.pressed(this.mouseX, this.mouseY);
-      this.draggedObj.move(x, y);
+      draggedObj.pressed(this.mouseX, this.mouseY);
+      draggedObj.move(x, y);
       return;
     }
 
-    if (_nextDistanceLessThanThreshold(this.draggedObj, collision, this._afterDraggedPosition)) {
-      const { x, y } = _calcTangentPoint(this.draggedObj, collision);
+    if (_nextDistanceLessThanThreshold(draggedObj, collision, this._afterDraggedPosition)) {
+      const { x, y } = _calcTangentPoint(draggedObj, collision);
 
-      this.draggedObj.pressed(this.mouseX, this.mouseY);
-      this.draggedObj.move(x, y);
+      draggedObj.pressed(this.mouseX, this.mouseY);
+      draggedObj.move(x, y);
       return;
     }
 
     super.mouseDragged();
   }
 
-  _backToTangentPoint() {
-    if (!this.draggedObj) {
-      return;
-    }
-
-    const collisions = this.collisions(this._afterDraggedPosition);
+  _backToTangentPoint(draggedObj, collisions) {
     const collision = Object.values(collisions)[0];
 
-    if (_nextDistanceLessThanThreshold(this.draggedObj, collision, this._afterDraggedPosition)) {
-      const { x, y } = _calcTangentPoint(this.draggedObj, collision);
+    if (_nextDistanceLessThanThreshold(draggedObj, collision, this._afterDraggedPosition)) {
+      const { x, y } = _calcTangentPoint(draggedObj, collision);
 
-      this.draggedObj.pressed(this.mouseX, this.mouseY);
-      this.draggedObj.move(x, y);
+      draggedObj.pressed(this.mouseX, this.mouseY);
+      draggedObj.move(x, y);
       return;
     }
 
