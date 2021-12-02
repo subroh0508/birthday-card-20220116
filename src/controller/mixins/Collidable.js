@@ -61,10 +61,10 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const ab = _calcDistanceThreshold(draggedObj, b);
 
     const angleB = Math.acos((ab * ab + bc * bc - ca * ca) / (2 * ab * bc));
-    const theta = Math.acos((b.translateX - c.translateX) / bc) + sign * angleB
+    const theta = Math.acos((c.translateX - b.translateX) / bc) + sign * angleB
 
-    const x = ab * Math.cos(theta) + c.translateX;
-    const y = ab * Math.sin(theta) + c.translateY;
+    const x = b.translateX + ab * Math.cos(theta);
+    const y = b.translateY - ab * Math.sin(theta);
 
     draggedObj.pressed(this.mouseX, this.mouseY);
     draggedObj.move(x, y);
