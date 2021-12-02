@@ -6,13 +6,13 @@ const sketch = (p) => {
   const canvas = new Canvas(
     p,
     [
-      { radius: 50, teethCount: 20, color: '#FF0000', translate: { x: 200, y: 200 }, direction: RotateDirection.LEFT },
+      { radius: 50, teethCount: 20, color: '#FF0000', translate: { x: 200, y: 92 }, direction: RotateDirection.LEFT },
       { radius: 50, teethCount: 20, color: '#00FF00', translate: { x: 92, y: 200 } },
-      { radius: 50, teethCount: 20, color: '#0000FF', translate: { x: 200, y: 92 } },
-      { radius: 50, teethCount: 20, color: '#00FFFF', translate: { x: 277, y: 277 } },
+      { radius: 50, teethCount: 20, color: '#0000FF', translate: { x: 300, y: 250 } },
+      { radius: 50, teethCount: 20, color: '#00FFFF', translate: { x: 500, y: 500 } },
     ],
     [
-      { radius: 100, boneCount: 8, color: '#FFFFFF', translate: { x: 300, y: 300 }, direction: RotateDirection.LEFT },
+      { radius: 100, boneCount: 8, color: '#FFFFFF', translate: { x: 100, y: 400 }, direction: RotateDirection.LEFT },
     ],
   );
 
@@ -20,7 +20,7 @@ const sketch = (p) => {
   };
 
   p.setup = () => {
-    p.createCanvas(400, 400);
+    p.createCanvas(p.windowWidth, p.windowHeight);
     p.background(100);
     p.frameRate(30);
   };
