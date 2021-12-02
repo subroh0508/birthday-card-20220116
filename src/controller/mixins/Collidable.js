@@ -23,7 +23,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     }
 
     if (this._isColliding) {
-      this._moveAvoidingObject(this.draggedObj, collisions);
+      //this._moveAvoidingObject(this.draggedObj, collisions);
       return;
     }
 
@@ -48,24 +48,24 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
   get _isColliding() { return this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
   get _willCollide() { return !this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
 
-  // 特定の並びの時のみうまくハマる
   _moveBothCollidingPoint(draggedObj, collisions) {
-    const collision1 = Object.values(collisions)[0];
-    const collision2 = Object.values(collisions)[1];
+    const [b, c] = _sortCollisions(draggedObj, Object.values(collisions));
 
-    const a = collision1.distance(collision2);
-    const b = _calcDistanceThreshold(collision1, draggedObj);
-    const c = _calcDistanceThreshold(draggedObj, collision2);
+    const slope = (b.translateY - c.translateY) / (b.translateX - c.translateX);
+    const intercept = b.translateY - slope * b.translateX;
 
-    const angleB = Math.acos((c * c + a * a - b * b) / (2 * c * a));
-    const theta = Math.acos((collision1.translateX - collision2.translateX) / a) - angleB
+    const sign = Math.sign(draggedObj.translateY - (slope * draggedObj.translateX + intercept)) * Math.sign(slope);
 
-    const x = c * Math.cos(theta) + collision2.translateX;
-    const y = c * Math.sin(theta) + collision2.translateY;
+    const bc = b.distance(c);
+    const ca = _calcDistanceThreshold(c, draggedObj);
+    const ab = _calcDistanceThreshold(draggedObj, b);
 
-    console.log(collision1.translateX, collision1.translateY);
-    console.log(collision2.translateX, collision2.translateY);
-    console.log(x, y);
+    const angleB = Math.acos((ab * ab + bc * bc - ca * ca) / (2 * ab * bc));
+    const theta = Math.acos((b.translateX - c.translateX) / bc) + sign * angleB
+
+    const x = ab * Math.cos(theta) + c.translateX;
+    const y = ab * Math.sin(theta) + c.translateY;
+
     draggedObj.pressed(this.mouseX, this.mouseY);
     draggedObj.move(x, y);
   }
@@ -166,6 +166,8 @@ const _calcDistanceThreshold = (objA, objB) => {
 
   return Infinity
 }
+
+const _sortCollisions = (draggedObj, collisions) => collisions.sort((a, b) => b.translateY - a.translateY || b.translateX - a.translateX);
 
 const _calcTangentPoint = (draggedObj, collision) => {
   const threshold = _calcDistanceThreshold(draggedObj, collision);
