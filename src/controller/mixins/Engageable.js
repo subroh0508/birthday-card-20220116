@@ -21,22 +21,23 @@ export const Engageable = (P5Controller) => class extends Collidable(P5Controlle
     console.log(this._adjancency);
   }
 
-  mouseDragged() {
-    super.mouseDragged();
+  _mouseDragged(draggedObj, collisions, nextCollisions) {
+    super._mouseDragged(draggedObj, collisions, nextCollisions);
 
-    this._changeRotation();
+    this._changeRotation(
+      draggedObj,
+      Object.fromEntries(collisions.map(t => [t.id, t])),
+    );
   }
 
-  _changeRotation() {
-    const collisions = this.collisions();
-
-    const hasPower = this.draggedObj && this.draggedObj.hasPower;
+  _changeRotation(draggedObj, collisions) {
+    const hasPower = draggedObj && draggedObj.hasPower;
     switch (hasPower) {
       case true:
-        _changeRotationDirectionActively(this.draggedObj, this.target, collisions);
+        _changeRotationDirectionActively(draggedObj, this.target, collisions);
         break;
       case false:
-        _changeRotationDirectionPassively(this.draggedObj, this.target, collisions);
+        _changeRotationDirectionPassively(draggedObj, this.target, collisions);
         break;
       default:
         break;

@@ -15,7 +15,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const collisions = this.collisions();
     const nextCollisions = this.collisions(this._afterDraggedPosition);
 
-    this._mouseDragged(this.draggedObj, Object.values(collisions), Object.values(nextCollisions));
+    this._mouseDragged(this.draggedObj, collisions, nextCollisions);
   }
 
   _mouseDragged(draggedObj, collisions, nextCollisions) {
@@ -87,10 +87,7 @@ const _getCollisions = (obj, target, point = null) => {
     return {};
   }
 
-  return Object.fromEntries(
-    target.filter(t => obj.id !== t.id && _collision(obj, t, point))
-      .map(t => [t.id, t]),
-  );
+  return target.filter(t => obj.id !== t.id && _collision(obj, t, point));
 }
 
 const _calcDistanceThreshold = (objA, objB) => {
