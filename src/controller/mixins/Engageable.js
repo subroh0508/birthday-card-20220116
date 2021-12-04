@@ -1,3 +1,4 @@
+import { collision } from './Collidable';
 import { Chainable } from './Chainable';
 
 export const Engageable = (P5Controller) => class extends Chainable(P5Controller) {
@@ -6,18 +7,7 @@ export const Engageable = (P5Controller) => class extends Chainable(P5Controller
   mousePressed() {
     super.mousePressed();
 
-    this._adjancency = {};
-    _combination(this.target, 2).forEach(([objA, objB]) => {
-      if (!this.collision(objA, objB)) {
-        return;
-      }
-
-      const listA = this._adjancency[objA.id] || [];
-      const listB = this._adjancency[objB.id] || [];
-
-      this._adjancency[objA.id] = [...listA, objB];
-      this._adjancency[objB.id] = [...listB, objA];
-    });
+    this._adjancency = _initAdjancency(this.target);
     console.log(this._adjancency);
   }
 
@@ -44,6 +34,17 @@ export const Engageable = (P5Controller) => class extends Chainable(P5Controller
     }
   }
 }
+
+const _initAdjancency = (target) => _combination(target, 2).reduce((acc, [objA, objB]) => {
+  if (!collision(objA, objB)) {
+    return acc;
+  }
+
+  acc[objA.id] = [...(acc[objA.id] || []), objB];
+  acc[objB.id] = [...(acc[objB.id] || []), objA];
+
+  return acc;
+}, {});
 
 const _combination = (objects, k) => {
   if (objects.length < k) {

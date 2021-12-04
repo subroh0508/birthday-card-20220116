@@ -3,17 +3,13 @@ import { Circle } from '../../model/abstract/Circle';
 import { Draggable } from './Draggable';
 
 export const Collidable = (P5Controller) => class extends Draggable(P5Controller) {
-  collision(objA, objB) { return _collision(objA, objB); }
-
-  collisions(point = null) { return _getCollisions(this.draggedObj, this.target, point); }
-
   mouseDragged() {
     if (!this.draggedObj) {
       return;
     }
 
-    const collisions = this.collisions();
-    const nextCollisions = this.collisions(this._afterDraggedPosition);
+    const collisions = _getCollisions(this.draggedObj, this.target);
+    const nextCollisions = _getCollisions(this.draggedObj, this.target, this._afterDraggedPosition);
 
     this.mouseDraggedWithCollisions(this.draggedObj, collisions, nextCollisions);
   }
@@ -49,7 +45,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
   get _afterDraggedY() { return this.mouseY - (!this.draggedObj ? 0 : this.draggedObj.pressedY); }
 }
 
-const _collision = (obj, target, point = null) => {
+export const collision = (obj, target, point = null) => {
   const x = !point ? obj.translateX : point.x;
   const y = !point ? obj.translateY : point.y;
 
@@ -69,7 +65,7 @@ const _getCollisions = (obj, target, point = null) => {
     return {};
   }
 
-  return target.filter(t => obj.id !== t.id && _collision(obj, t, point));
+  return target.filter(t => obj.id !== t.id && collision(obj, t, point));
 }
 
 const _calcTranslatePointFromTwoObjects = (draggedObj, collision) => {
