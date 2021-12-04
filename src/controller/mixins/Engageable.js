@@ -7,13 +7,16 @@ export const Engageable = (P5Controller) => class extends Chainable(P5Controller
   mousePressed() {
     super.mousePressed();
 
-    this._adjancency = _initAdjancency(this.target);
-    console.log(this._adjancency);
+    if (!Object.keys(this._adjancency).length) {
+      this._adjancency = _initAdjancency(this.target);
+    }
   }
 
   mouseDraggedWithCollisions(draggedObj, collisions, nextCollisions) {
     super.mouseDraggedWithCollisions(draggedObj, collisions, nextCollisions);
 
+    this._adjancency = _updateAdjancency(this._adjancency, draggedObj, collisions, nextCollisions);
+    console.log(this._adjancency);
     this._changeRotation(
       draggedObj,
       Object.fromEntries(collisions.map(t => [t.id, t])),
@@ -45,6 +48,30 @@ const _initAdjancency = (target) => _combination(target, 2).reduce((acc, [objA, 
 
   return acc;
 }, {});
+
+const _updateAdjancency = (adjancency, draggedObj, collisions, nextCollisions) => {
+  const additional = nextCollisions.filter(({ id }) => !collisions.find(c => c.id === id));
+  const removal = !nextCollisions.length ? collisions : [];
+
+  if (!additional.length && !removal.length) {
+    return adjancency;
+  }
+
+  adjancency[draggedObj.id] = additional.reduce(
+    (acc, obj) => !acc.some(c => c.id === obj.id) ? [...acc, obj] : acc,
+    adjancency[draggedObj.id] || [],
+  ).filter(obj => !removal.some(c => c.id === obj.id));
+
+  additional.forEach(obj => {
+    adjancency[obj.id] = [...(adjancency[obj.id] || []).filter(c => c.id !== draggedObj.id), draggedObj];
+  });
+
+  removal.forEach(obj => {
+    adjancency[obj.id] = (adjancency[obj.id] || []).filter(c => c.id !== draggedObj.id);
+  });
+
+  return adjancency;
+};
 
 const _combination = (objects, k) => {
   if (objects.length < k) {
