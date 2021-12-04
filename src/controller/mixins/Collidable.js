@@ -23,7 +23,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const isColliding = collisions.length > 0 && nextCollisions.length > 0;
 
     if (willCollideAtMultiplePoints) {
-      this._moveBothCollidingPoint(draggedObj, nextCollisions);
+      this._moveToCollidingMultipleObjectsPoint(draggedObj, nextCollisions);
       return;
     }
 
@@ -38,23 +38,25 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
       && nextCollision.distance(this._afterDraggedPosition) <= threshold;
 
     if (willCollide) {
-      this._backToTangentPoint(draggedObj, nextCollision, threshold);
+      this._moveToCollidingTwoObjectsPoint(draggedObj, nextCollision, threshold);
       return;
     }
 
     super.mouseDragged();
   }
 
-  _moveBothCollidingPoint(draggedObj, collisions) {
-    const [b, c] = _sortCollisions(draggedObj, collisions);
-    const { x, y } = _calcTranslatePointFromTriangle(draggedObj, b, c);
+  _moveToCollidingMultipleObjectsPoint(draggedObj, collisions) {
+    const { x, y } = _calcTranslatePointFromTriangle(
+      draggedObj,
+      ..._sortCollisions(draggedObj, collisions),
+    );
 
     draggedObj.pressed(this.mouseX, this.mouseY);
     draggedObj.move(x, y);
   }
 
-  _backToTangentPoint(draggedObj, collision, threshold) {
-    const { x, y } = _calcTangentPoint(draggedObj, collision, threshold);
+  _moveToCollidingTwoObjectsPoint(draggedObj, collision, threshold) {
+    const { x, y } = _calcTranslatePointFromTwoObjects(draggedObj, collision, threshold);
 
     draggedObj.pressed(this.mouseX, this.mouseY);
     draggedObj.move(x, y);
@@ -118,20 +120,20 @@ const _calcTranslatePointFromTriangle = (a, b, c) => {
   const angleB = Math.acos((ab * ab + bc * bc - ca * ca) / (2 * ab * bc));
   const theta = Math.acos((c.translateX - b.translateX) / bc) + sign * angleB
 
-  return { x: b.translateX + ab * Math.cos(theta), y: b.translateY - ab * Math.sin(theta) };
+  return {
+    x: b.translateX + ab * Math.cos(theta),
+    y: b.translateY - ab * Math.sin(theta),
+  };
 }
 
-const _calcTangentPoint = (draggedObj, collision, threshold) => {
-  const nowDistanceX = collision.translateX - draggedObj.translateX;
-  const nowDistanceY = collision.translateY - draggedObj.translateY;
-
-  const nowDistance = Math.sqrt(nowDistanceX * nowDistanceX + nowDistanceY * nowDistanceY);
+const _calcTranslatePointFromTwoObjects = (draggedObj, collision, threshold) => {
+  const nowDistance = draggedObj.distance(collision);
 
   const backAmount = nowDistance - threshold;
-  const theta = Math.asin(nowDistanceX / nowDistance);
+  const theta = Math.asin((collision.translateX - draggedObj.translateX) / nowDistance);
 
-  const x = draggedObj.translateX + backAmount * Math.cos(theta);
-  const y = draggedObj.translateY + backAmount * Math.sin(theta);
-
-  return { x, y };
+  return {
+    x: draggedObj.translateX + backAmount * Math.cos(theta),
+    y: draggedObj.translateY + backAmount * Math.sin(theta),
+  };
 }
