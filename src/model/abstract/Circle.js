@@ -41,6 +41,10 @@ export class Circle extends CircleBehavior {
       return this.distance(model.translateX, model.translateY);
     }
 
+    if (model.hasOwnProperty('x') && model.hasOwnProperty('y')) {
+      return this.distance(model.x, model.y);
+    }
+
     return -1;
   }
 }
