@@ -32,13 +32,12 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     }
 
     const nextCollision = nextCollisions[0];
-    const threshold = _calcDistanceThreshold(draggedObj, nextCollision);
 
     const willCollide = collisions.length === 0 && nextCollisions.length > 0
-      && nextCollision.distance(this._afterDraggedPosition) <= threshold;
+      && nextCollision.distance(this._afterDraggedPosition) <= draggedObj.minDistance(nextCollision);
 
     if (willCollide) {
-      this._moveToCollidingTwoObjectsPoint(draggedObj, nextCollision, threshold);
+      this._moveToCollidingTwoObjectsPoint(draggedObj, nextCollision);
       return;
     }
 
@@ -55,8 +54,8 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     draggedObj.move(x, y);
   }
 
-  _moveToCollidingTwoObjectsPoint(draggedObj, collision, threshold) {
-    const { x, y } = _calcTranslatePointFromTwoObjects(draggedObj, collision, threshold);
+  _moveToCollidingTwoObjectsPoint(draggedObj, collision) {
+    const { x, y } = _calcTranslatePointFromTwoObjects(draggedObj, collision);
 
     draggedObj.pressed(this.mouseX, this.mouseY);
     draggedObj.move(x, y);
@@ -72,11 +71,11 @@ const _collision = (obj, target, point = null) => {
   const y = !point ? obj.translateY : point.y;
 
   if (obj instanceof Gear && target instanceof Gear) {
-    return Math.trunc(target.distance(x, y)) <= Math.trunc(_calcDistanceThreshold(obj, target));
+    return Math.trunc(target.distance(x, y)) <= Math.trunc(obj.minDistance(target));
   }
 
   if (obj instanceof Circle && target instanceof Circle) {
-    return Math.trunc(target.distance(x, y)) <= Math.trunc(_calcDistanceThreshold(obj, target));
+    return Math.trunc(target.distance(x, y)) <= Math.trunc(obj.minDistance(target));
   }
 
   return false;
@@ -90,18 +89,6 @@ const _getCollisions = (obj, target, point = null) => {
   return target.filter(t => obj.id !== t.id && _collision(obj, t, point));
 }
 
-const _calcDistanceThreshold = (objA, objB) => {
-  if (objA instanceof Gear && objB instanceof Gear) {
-    return objA.innerRadius + objB.innerRadius + (objA.teethHeight + objB.teethHeight) / 2;
-  }
-
-  if (objA instanceof Circle && objB instanceof Circle) {
-    return objA.radius + objB.radius;
-  }
-
-  return Infinity
-}
-
 const _sortCollisions = (draggedObj, collisions) => collisions.sort((a, b) => b.translateY - a.translateY || b.translateX - a.translateX);
 
 const _calcTranslatePointFromTriangle = (a, b, c) => {
@@ -111,8 +98,8 @@ const _calcTranslatePointFromTriangle = (a, b, c) => {
   const sign = Math.sign(a.translateY - (slope * a.translateX + intercept)) * Math.sign(slope);
 
   const bc = b.distance(c);
-  const ca = _calcDistanceThreshold(c, a);
-  const ab = _calcDistanceThreshold(a, b);
+  const ca = c.minDistance(a);
+  const ab = a.minDistance(b);
 
   const angleB = Math.acos((ab * ab + bc * bc - ca * ca) / (2 * ab * bc));
   const theta = Math.acos((c.translateX - b.translateX) / bc) + sign * angleB
@@ -123,10 +110,11 @@ const _calcTranslatePointFromTriangle = (a, b, c) => {
   };
 }
 
-const _calcTranslatePointFromTwoObjects = (draggedObj, collision, threshold) => {
+const _calcTranslatePointFromTwoObjects = (draggedObj, collision) => {
+  const minDistance = draggedObj.minDistance(collision);
   const nowDistance = draggedObj.distance(collision);
 
-  const backAmount = nowDistance - threshold;
+  const backAmount = nowDistance - minDistance;
   const theta = Math.asin((collision.translateX - draggedObj.translateX) / nowDistance);
 
   return {

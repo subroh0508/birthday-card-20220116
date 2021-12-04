@@ -23,6 +23,14 @@ export class Circle extends CircleBehavior {
     return this.distance(mouseX, mouseY) <= this.radius;
   }
 
+  minDistance(model) {
+    if (model instanceof Circle) {
+      return this.radius + model.radius;
+    }
+
+    return -1;
+  }
+
   distance(...args) {
     switch (args.length) {
       case 1:
