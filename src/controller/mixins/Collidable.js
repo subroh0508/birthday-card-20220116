@@ -17,22 +17,7 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const collisions = this.collisions();
     const nextCollisions = this.collisions(this._afterDraggedPosition);
 
-    if (Object.keys(nextCollisions).length === 2) {
-      this._moveBothCollidingPoint(this.draggedObj, nextCollisions);
-      return;
-    }
-
-    if (this._isColliding) {
-      //this._moveAvoidingObject(this.draggedObj, collisions);
-      return;
-    }
-
-    if (this._willCollide) {
-      this._backToTangentPoint(this.draggedObj, nextCollisions);
-      return;
-    }
-
-    super.mouseDragged();
+    this._mouseDragged(this.draggedObj, Object.values(collisions), Object.values(nextCollisions));
   }
 
   mousePressed() {
@@ -43,6 +28,33 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
   mouseReleased() {
     super.mouseReleased();
     this._ref = null;
+  }
+
+  _mouseDragged(draggedObj, collisions, nextCollisions) {
+    const willCollideAtMultiplePoints = collisions.length < 2 && nextCollisions.length > 1;
+    const isColliding = collisions.length > 0 && nextCollisions.length > 0;
+
+    if (willCollideAtMultiplePoints) {
+      this._moveBothCollidingPoint(draggedObj, nextCollisions);
+      return;
+    }
+
+    if (isColliding) {
+      return;
+    }
+
+    const nextCollision = nextCollisions[0];
+    const threshold = _calcDistanceThreshold(draggedObj, nextCollision);
+
+    const willCollide = collisions.length === 0 && nextCollisions.length > 0
+      && nextCollision.distance(this._afterDraggedPosition) <= threshold;
+
+    if (willCollide) {
+      this._backToTangentPoint(draggedObj, nextCollision, threshold);
+      return;
+    }
+
+    super.mouseDragged();
   }
 
   get _isColliding() { return this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
@@ -105,18 +117,11 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     super.mouseDragged();
   }
 
-  _backToTangentPoint(draggedObj, collisions) {
-    const collision = Object.values(collisions)[0];
+  _backToTangentPoint(draggedObj, collision, threshold) {
+    const { x, y } = _calcTangentPoint(draggedObj, collision, threshold);
 
-    if (_nextDistanceLessThanThreshold(draggedObj, collision, this._afterDraggedPosition)) {
-      const { x, y } = _calcTangentPoint(draggedObj, collision);
-
-      draggedObj.pressed(this.mouseX, this.mouseY);
-      draggedObj.move(x, y);
-      return;
-    }
-
-    super.mouseDragged();
+    draggedObj.pressed(this.mouseX, this.mouseY);
+    draggedObj.move(x, y);
   }
 
   _hasCollision(point = null) { return Object.keys(this.collisions(point)).length !== 0; }
@@ -169,9 +174,7 @@ const _calcDistanceThreshold = (objA, objB) => {
 
 const _sortCollisions = (draggedObj, collisions) => collisions.sort((a, b) => b.translateY - a.translateY || b.translateX - a.translateX);
 
-const _calcTangentPoint = (draggedObj, collision) => {
-  const threshold = _calcDistanceThreshold(draggedObj, collision);
-
+const _calcTangentPoint = (draggedObj, collision, threshold) => {
   const nowDistanceX = collision.translateX - draggedObj.translateX;
   const nowDistanceY = collision.translateY - draggedObj.translateY;
 
