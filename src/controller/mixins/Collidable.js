@@ -3,8 +3,6 @@ import { Circle } from '../../model/abstract/Circle';
 import { Draggable } from './Draggable';
 
 export const Collidable = (P5Controller) => class extends Draggable(P5Controller) {
-  _ref = null;
-
   collision(objA, objB) { return _collision(objA, objB); }
 
   collisions(point = null) { return _getCollisions(this.draggedObj, this.target, point); }
@@ -18,16 +16,6 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const nextCollisions = this.collisions(this._afterDraggedPosition);
 
     this._mouseDragged(this.draggedObj, Object.values(collisions), Object.values(nextCollisions));
-  }
-
-  mousePressed() {
-    super.mousePressed();
-    this._ref = { x: this.mouseX, y: this.mouseY };
-  }
-
-  mouseReleased() {
-    super.mouseReleased();
-    this._ref = null;
   }
 
   _mouseDragged(draggedObj, collisions, nextCollisions) {
@@ -57,9 +45,6 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     super.mouseDragged();
   }
 
-  get _isColliding() { return this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
-  get _willCollide() { return !this._hasCollision() && this._hasCollision(this._afterDraggedPosition); }
-
   _moveBothCollidingPoint(draggedObj, collisions) {
     const [b, c] = _sortCollisions(draggedObj, Object.values(collisions));
 
@@ -82,49 +67,12 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     draggedObj.move(x, y);
   }
 
-  _moveAvoidingObject(draggedObj, collisions) {
-    const collision = Object.values(collisions)[0];
-
-    const threshold = _calcDistanceThreshold(draggedObj, collision);
-
-    const d1X = collision.translateX - this._afterDraggedX;
-    const d1Y = collision.translateY - this._afterDraggedY;
-
-    const d1 = d1X * d1X + d1Y * d1Y;
-
-    const wrapDirection = _calcWrapDirection(collision, this._ref, this.mouseX, this.mouseY);
-    const { x, y } = _calcWrapAroundPoint(draggedObj, collision, this.movedX, this.movedY, wrapDirection);
-
-    const d2X = collision.translateX - x;
-    const d2Y = collision.translateY - y;
-
-    const d2 = d2X * d2X + d2Y * d2Y;
-
-    if (d1 < threshold * threshold || d1 < d2) {
-      draggedObj.pressed(this.mouseX, this.mouseY);
-      draggedObj.move(x, y);
-      return;
-    }
-
-    if (_nextDistanceLessThanThreshold(draggedObj, collision, this._afterDraggedPosition)) {
-      const { x, y } = _calcTangentPoint(draggedObj, collision);
-
-      draggedObj.pressed(this.mouseX, this.mouseY);
-      draggedObj.move(x, y);
-      return;
-    }
-
-    super.mouseDragged();
-  }
-
   _backToTangentPoint(draggedObj, collision, threshold) {
     const { x, y } = _calcTangentPoint(draggedObj, collision, threshold);
 
     draggedObj.pressed(this.mouseX, this.mouseY);
     draggedObj.move(x, y);
   }
-
-  _hasCollision(point = null) { return Object.keys(this.collisions(point)).length !== 0; }
 
   get _afterDraggedPosition() { return { x: this._afterDraggedX, y: this._afterDraggedY }; }
   get _afterDraggedX() { return this.mouseX - (!this.draggedObj ? 0 : this.draggedObj.pressedX); }
@@ -157,9 +105,6 @@ const _getCollisions = (obj, target, point = null) => {
   );
 }
 
-const _nextDistanceLessThanThreshold =
-  (draggedObj, collision, next) => collision.distance(next.x, next.y) <= _calcDistanceThreshold(draggedObj, collision);
-
 const _calcDistanceThreshold = (objA, objB) => {
   if (objA instanceof Gear && objB instanceof Gear) {
     return objA.innerRadius + objB.innerRadius + (objA.teethHeight + objB.teethHeight) / 2;
@@ -185,36 +130,6 @@ const _calcTangentPoint = (draggedObj, collision, threshold) => {
 
   const x = draggedObj.translateX + backAmount * Math.cos(theta);
   const y = draggedObj.translateY + backAmount * Math.sin(theta);
-
-  return { x, y };
-}
-
-const _calcWrapDirection = (collision, ref, mouseX, mouseY) => {
-  if (!ref) {
-    return 1;
-  }
-
-  const dx = mouseX - ref.x;
-  const dy = mouseY - ref.y;
-
-  if (Math.abs(dx) <= Math.abs(dy)) {
-    return dy < 0 ? -1 : 1;
-  }
-
-  return (ref.y - collision.translateY) < 0 ? -1 : 1;
-}
-
-const _calcWrapAroundPoint = (draggedObj, collision, dx, dy, wrapDirection) => {
-  const distanceX = collision.translateX - draggedObj.translateX;
-  const distanceY = collision.translateY - draggedObj.translateY;
-
-  const movement = dx * dx + dy * dy;
-
-  const distance = Math.pow(_calcDistanceThreshold(collision, draggedObj), 2);
-  const theta = Math.atan(distanceY / distanceX) + wrapDirection * (Math.PI / 2 - Math.asin(movement / (distance * 2)));
-
-  const x = Math.sqrt(movement) * Math.cos(theta) + draggedObj.translateX;
-  const y = Math.sqrt(movement) * Math.sin(theta) + draggedObj.translateY;
 
   return { x, y };
 }
