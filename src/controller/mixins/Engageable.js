@@ -1,6 +1,6 @@
-import { Collidable } from './Collidable';
+import { Chainable } from './Chainable';
 
-export const Engageable = (P5Controller) => class extends Collidable(P5Controller) {
+export const Engageable = (P5Controller) => class extends Chainable(P5Controller) {
   _adjancency = {};
 
   mousePressed() {
@@ -21,8 +21,8 @@ export const Engageable = (P5Controller) => class extends Collidable(P5Controlle
     console.log(this._adjancency);
   }
 
-  _mouseDragged(draggedObj, collisions, nextCollisions) {
-    super._mouseDragged(draggedObj, collisions, nextCollisions);
+  mouseDraggedWithCollisions(draggedObj, collisions, nextCollisions) {
+    super.mouseDraggedWithCollisions(draggedObj, collisions, nextCollisions);
 
     this._changeRotation(
       draggedObj,

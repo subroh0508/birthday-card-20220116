@@ -15,18 +15,11 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     const collisions = this.collisions();
     const nextCollisions = this.collisions(this._afterDraggedPosition);
 
-    this._mouseDragged(this.draggedObj, collisions, nextCollisions);
+    this.mouseDraggedWithCollisions(this.draggedObj, collisions, nextCollisions);
   }
 
-  _mouseDragged(draggedObj, collisions, nextCollisions) {
-    const willCollideAtMultiplePoints = collisions.length < 2 && nextCollisions.length > 1;
+  mouseDraggedWithCollisions(draggedObj, collisions, nextCollisions) {
     const isColliding = collisions.length > 0 && nextCollisions.length > 0;
-
-    if (willCollideAtMultiplePoints) {
-      this._moveToCollidingMultipleObjectsPoint(draggedObj, nextCollisions);
-      return;
-    }
-
     if (isColliding) {
       return;
     }
@@ -42,16 +35,6 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
     }
 
     super.mouseDragged();
-  }
-
-  _moveToCollidingMultipleObjectsPoint(draggedObj, collisions) {
-    const { x, y } = _calcTranslatePointFromTriangle(
-      draggedObj,
-      ..._sortCollisions(draggedObj, collisions),
-    );
-
-    draggedObj.pressed(this.mouseX, this.mouseY);
-    draggedObj.move(x, y);
   }
 
   _moveToCollidingTwoObjectsPoint(draggedObj, collision) {
@@ -87,27 +70,6 @@ const _getCollisions = (obj, target, point = null) => {
   }
 
   return target.filter(t => obj.id !== t.id && _collision(obj, t, point));
-}
-
-const _sortCollisions = (draggedObj, collisions) => collisions.sort((a, b) => b.translateY - a.translateY || b.translateX - a.translateX);
-
-const _calcTranslatePointFromTriangle = (a, b, c) => {
-  const slope = (b.translateY - c.translateY) / (b.translateX - c.translateX);
-  const intercept = b.translateY - slope * b.translateX;
-
-  const sign = Math.sign(a.translateY - (slope * a.translateX + intercept)) * Math.sign(slope);
-
-  const bc = b.distance(c);
-  const ca = c.minDistance(a);
-  const ab = a.minDistance(b);
-
-  const angleB = Math.acos((ab * ab + bc * bc - ca * ca) / (2 * ab * bc));
-  const theta = Math.acos((c.translateX - b.translateX) / bc) + sign * angleB
-
-  return {
-    x: b.translateX + ab * Math.cos(theta),
-    y: b.translateY - ab * Math.sin(theta),
-  };
 }
 
 const _calcTranslatePointFromTwoObjects = (draggedObj, collision) => {
