@@ -46,22 +46,8 @@ export const Collidable = (P5Controller) => class extends Draggable(P5Controller
   }
 
   _moveBothCollidingPoint(draggedObj, collisions) {
-    const [b, c] = _sortCollisions(draggedObj, Object.values(collisions));
-
-    const slope = (b.translateY - c.translateY) / (b.translateX - c.translateX);
-    const intercept = b.translateY - slope * b.translateX;
-
-    const sign = Math.sign(draggedObj.translateY - (slope * draggedObj.translateX + intercept)) * Math.sign(slope);
-
-    const bc = b.distance(c);
-    const ca = _calcDistanceThreshold(c, draggedObj);
-    const ab = _calcDistanceThreshold(draggedObj, b);
-
-    const angleB = Math.acos((ab * ab + bc * bc - ca * ca) / (2 * ab * bc));
-    const theta = Math.acos((c.translateX - b.translateX) / bc) + sign * angleB
-
-    const x = b.translateX + ab * Math.cos(theta);
-    const y = b.translateY - ab * Math.sin(theta);
+    const [b, c] = _sortCollisions(draggedObj, collisions);
+    const { x, y } = _calcTranslatePointFromTriangle(draggedObj, b, c);
 
     draggedObj.pressed(this.mouseX, this.mouseY);
     draggedObj.move(x, y);
@@ -118,6 +104,22 @@ const _calcDistanceThreshold = (objA, objB) => {
 }
 
 const _sortCollisions = (draggedObj, collisions) => collisions.sort((a, b) => b.translateY - a.translateY || b.translateX - a.translateX);
+
+const _calcTranslatePointFromTriangle = (a, b, c) => {
+  const slope = (b.translateY - c.translateY) / (b.translateX - c.translateX);
+  const intercept = b.translateY - slope * b.translateX;
+
+  const sign = Math.sign(a.translateY - (slope * a.translateX + intercept)) * Math.sign(slope);
+
+  const bc = b.distance(c);
+  const ca = _calcDistanceThreshold(c, a);
+  const ab = _calcDistanceThreshold(a, b);
+
+  const angleB = Math.acos((ab * ab + bc * bc - ca * ca) / (2 * ab * bc));
+  const theta = Math.acos((c.translateX - b.translateX) / bc) + sign * angleB
+
+  return { x: b.translateX + ab * Math.cos(theta), y: b.translateY - ab * Math.sin(theta) };
+}
 
 const _calcTangentPoint = (draggedObj, collision, threshold) => {
   const nowDistanceX = collision.translateX - draggedObj.translateX;
