@@ -2,9 +2,9 @@ import { collision } from './Collidable';
 import { Chainable } from './Chainable';
 import { Graph } from '../supports/Graph';
 import { RotateDirection } from '../../model/mixins/Rotatable';
+import { combination } from '../../utilities';
 
 export const Engageable = (P5Controller) => class extends Chainable(P5Controller) {
-  _adjancencyList = {};
   _graph = null;
 
   get hasPowerObjects() { return this.target.filter(t => t.hasPower); }
@@ -42,7 +42,7 @@ export const Engageable = (P5Controller) => class extends Chainable(P5Controller
   }
 }
 
-const _initAdjacencyList = (target) => _combination(target, 2).reduce((acc, [objA, objB]) => {
+const _initAdjacencyList = (target) => combination(target, 2).reduce((acc, [objA, objB]) => {
   if (!collision(objA, objB)) {
     return acc;
   }
@@ -57,24 +57,6 @@ const _additionalCollisions = (collisions, nextCollisions) =>
   nextCollisions.filter(({ id }) => !collisions.find(c => c.id === id));
 const _removalCollisions = (collisions, nextCollisions) =>
   !nextCollisions.length ? collisions : [];
-
-const _combination = (objects, k) => {
-  if (objects.length < k) {
-    return [];
-  }
-
-  if (k === 1) {
-    return objects.map((obj) => [obj]);
-  }
-
-  let combination = [];
-  for (let i = 0; i <= objects.length - k; i++) {
-    const row = _combination(objects.slice(i + 1), k - 1);
-    combination = [...combination, ...row.map((r) => [objects[i], ...r])];
-  }
-
-  return combination;
-};
 
 const _searchOrigin = (objects, target, graph) => objects.reduce((acc, o) => {
   const originId = graph.getNodes(o)[0];
