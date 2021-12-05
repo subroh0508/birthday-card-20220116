@@ -23,6 +23,14 @@ export class Circle extends CircleBehavior {
     return this.distance(mouseX, mouseY) <= this.radius;
   }
 
+  minDistance(model) {
+    if (model instanceof Circle) {
+      return this.radius + model.radius;
+    }
+
+    return -1;
+  }
+
   distance(...args) {
     switch (args.length) {
       case 1:
@@ -39,6 +47,10 @@ export class Circle extends CircleBehavior {
   _distanceFromModel(model) {
     if (model instanceof Circle) {
       return this.distance(model.translateX, model.translateY);
+    }
+
+    if (model.hasOwnProperty('x') && model.hasOwnProperty('y')) {
+      return this.distance(model.x, model.y);
     }
 
     return -1;

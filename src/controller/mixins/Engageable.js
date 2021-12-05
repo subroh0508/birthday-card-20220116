@@ -1,48 +1,62 @@
-import { Collidable } from './Collidable';
+import { collision } from './Collidable';
+import { Chainable } from './Chainable';
+import { Graph } from '../supports/Graph';
+import { RotateDirection } from '../../model/mixins/Rotatable';
 
-export const Engageable = (P5Controller) => class extends Collidable(P5Controller) {
-  _adjancency = {};
+export const Engageable = (P5Controller) => class extends Chainable(P5Controller) {
+  _adjancencyList = {};
+  _graph = null;
+
+  get hasPowerObjects() { return this.target.filter(t => t.hasPower); }
 
   mousePressed() {
     super.mousePressed();
 
-    this._adjancency = {};
-    _combination(this.target, 2).forEach(([objA, objB]) => {
-      if (!this.collision(objA, objB)) {
-        return;
-      }
-
-      const listA = this._adjancency[objA.id] || [];
-      const listB = this._adjancency[objB.id] || [];
-
-      this._adjancency[objA.id] = [...listA, objB];
-      this._adjancency[objB.id] = [...listB, objA];
-    });
-    console.log(this._adjancency);
+    this._graph = new Graph(_initAdjacencyList(this.target), this.hasPowerObjects);
   }
 
-  mouseDragged() {
-    super.mouseDragged();
+  mouseDraggedWithCollisions(draggedObj, collisions, nextCollisions) {
+    super.mouseDraggedWithCollisions(draggedObj, collisions, nextCollisions);
 
-    this._changeRotation();
+    this._changeRotation(
+      draggedObj,
+      _additionalCollisions(collisions, nextCollisions),
+      _removalCollisions(collisions, nextCollisions),
+    );
   }
 
-  _changeRotation() {
-    const collisions = this.collisions;
-
-    const hasPower = this.draggedObj && this.draggedObj.hasPower;
-    switch (hasPower) {
-      case true:
-        _changeRotationDirectionActively(this.draggedObj, this.target, collisions);
-        break;
-      case false:
-        _changeRotationDirectionPassively(this.draggedObj, this.target, collisions);
-        break;
-      default:
-        break;
+  _changeRotation(draggedObj, additional, removal) {
+    if (!this._graph) {
+      return;
     }
+
+    this._graph.update(draggedObj, additional, removal);
+
+    const targetMap = Object.fromEntries(this.target.map(t => [t.id, t]));
+
+    _searchOrigin([draggedObj, ...additional, ...removal], this.target, this._graph).forEach(
+      origin => Object.entries(_buildRotationList(origin, this.target, this._graph)).forEach(
+        ([id, direction]) => targetMap[id] && (targetMap[id].direction = direction),
+      ),
+    );
   }
 }
+
+const _initAdjacencyList = (target) => _combination(target, 2).reduce((acc, [objA, objB]) => {
+  if (!collision(objA, objB)) {
+    return acc;
+  }
+
+  acc[objA.id] = [...(acc[objA.id] || []), objB];
+  acc[objB.id] = [...(acc[objB.id] || []), objA];
+
+  return acc;
+}, {});
+
+const _additionalCollisions = (collisions, nextCollisions) =>
+  nextCollisions.filter(({ id }) => !collisions.find(c => c.id === id));
+const _removalCollisions = (collisions, nextCollisions) =>
+  !nextCollisions.length ? collisions : [];
 
 const _combination = (objects, k) => {
   if (objects.length < k) {
@@ -62,27 +76,52 @@ const _combination = (objects, k) => {
   return combination;
 };
 
-const _changeRotationDirectionActively = (dragged, target, collisions) => {
-  target.forEach(t => {
-    if (collisions[t.id]) {
-      t.direction = -dragged.direction;
-      return;
-    }
-
-    t.rotateStop();
-  });
-}
-
-const _changeRotationDirectionPassively = (dragged, target, collisions) => {
-  if (Object.values(collisions).every(c => c.isStopped())) {
-    dragged.rotateStop();
-    return;
+const _searchOrigin = (objects, target, graph) => objects.reduce((acc, o) => {
+  const originId = graph.getNodes(o)[0];
+  const origin = target.find(t => t.id === originId);
+  if (!origin || acc.some(a => a.id === origin.id)) {
+    return acc;
   }
 
-  target.forEach(t => {
-    const collision = collisions[t.id]
-    if (collision) {
-      dragged.direction = -collision.direction;
-    }
-  });
+  return [...acc, origin];
+}, []);
+
+const _buildRotationList = (origin, target, graph) => {
+  let rotation = { [origin.id]: origin.direction };
+
+  graph.reduceNode(
+    origin,
+    (valid, currentId, next) => {
+      const currentRotation = rotation[currentId];
+      next.forEach(n => {
+        if (rotation.hasOwnProperty(n.id)) {
+          return;
+        }
+
+        rotation[n.id] = valid ? -currentRotation : RotateDirection.STOP;
+      });
+
+      if (!valid) {
+        rotation[currentId] = RotateDirection.STOP;
+        return false;
+      }
+
+      if (
+        next.some(
+          n => (n.hasPower && n.direction === currentRotation)
+            || (rotation[n.id] === currentRotation),
+        )
+      ) {
+        rotation = Object.fromEntries(
+          Object.entries(rotation).map(([id, _]) => [Number(id), RotateDirection.STOP]),
+        );
+        return false;
+      }
+
+      return true;
+    },
+    origin.hasPower,
+  );
+
+  return rotation;
 }
