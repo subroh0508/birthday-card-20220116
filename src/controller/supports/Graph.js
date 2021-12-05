@@ -1,28 +1,48 @@
 export class Graph {
   _adjacencyList = {};
   _graph = [];
+  _primaryNodes = [];
 
-  constructor(adjacencyList) {
+  constructor(adjacencyList, primaryNodes) {
     this.adjacencyList = adjacencyList;
+    this._primaryNodes = primaryNodes.map(n => n.id);
   }
 
   update(object, collisions, nextCollisions) {
     this.adjacencyList = _updateAdjacencyList(this._adjacencyList, object, collisions, nextCollisions);
   }
 
-  forEach(callback) { this._graph.forEach(callback); }
+  getNodes(object) { return this._graph.find(node => node.includes(object.id)) || [] }
+
+  reduceNode(object, callback, initialValue) {
+    const targetGraph = this.getNodes(object);
+    if (!targetGraph) {
+      return;
+    }
+
+    targetGraph.reduce((acc, id) => callback(acc, id, this.adjacencyList[id] || []), initialValue);
+  }
 
   get adjacencyList () { return this._adjacencyList; }
   set adjacencyList(adjacencyList) {
     this._adjacencyList = adjacencyList;
-    this._graph = _initGraph(adjacencyList);
+    this._graph = _initGraph(adjacencyList, this._primaryNodes);
   }
 }
 
-const _initGraph = (initAdjacencyList) => {
+const _initGraph = (initAdjacencyList, primaryNodes) => {
   let adjacencyList = Object.entries(initAdjacencyList).filter(([_, node]) => !!node.length)
-    .sort(([_id1, node1], [_id2, node2]) => node1.length - node2.length)
-    .map(([id, node]) => [Number(id), node]);
+    .map(([id, node]) => [Number(id), node])
+    .sort(([id1, node1], [id2, node2]) => {
+      if (primaryNodes.includes(id1) && !primaryNodes.includes(id2)) {
+        return -1;
+      }
+      if (!primaryNodes.includes(id1) && primaryNodes.includes(id2)) {
+        return 1;
+      }
+
+      return node1.length - node2.length;
+    });
 
   const graph = [];
   while (!!Object.keys(adjacencyList).length) {
@@ -48,7 +68,7 @@ const _searchChainNode = (originId, adjacencyList) => {
     node.push(visit);
 
     (adjacencyList[visit] || []).forEach(n => {
-      if (node.includes(n.id)) {
+      if (node.includes(n.id) || nextVisits.includes(n.id)) {
         return;
       }
 
