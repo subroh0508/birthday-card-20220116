@@ -12,7 +12,7 @@ export class Graph {
     this.adjacencyList = _updateAdjacencyList(this._adjacencyList, object, collisions, nextCollisions);
   }
 
-  getNodes(object) { return this._graph.find(node => node.includes(object.id)) || [] }
+  getNodes(object) { return this._graph.find(node => node.includes(object.id)) || [object.id] }
 
   reduceNode(object, callback, initialValue) {
     const targetGraph = this.getNodes(object);
@@ -79,10 +79,7 @@ const _searchChainNode = (originId, adjacencyList) => {
   return node;
 }
 
-const _updateAdjacencyList = (adjacencyList, object, collisions, nextCollisions) => {
-  const additional = nextCollisions.filter(({ id }) => !collisions.find(c => c.id === id));
-  const removal = !nextCollisions.length ? collisions : [];
-
+const _updateAdjacencyList = (adjacencyList, object, additional, removal) => {
   if (!additional.length && !removal.length) {
     return adjacencyList;
   }
