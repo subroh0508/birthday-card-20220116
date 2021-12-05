@@ -19,3 +19,5 @@ export const combination = (objects, k) => {
 
   return comb;
 };
+
+export const degToRad = (degree) => Math.PI * 2 / 360 * degree;

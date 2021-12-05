@@ -11,24 +11,37 @@ export class Umbrella extends Circle {
     this.boneCount = args.boneCount;
   }
 
-  drawBlock() {
-    this.translate(this.translateX, this.translateY);
-    this.rotate(this.rotationAngle);
+  drawBlock(g) {
+    this._drawBlock(
+      g,
+      this.radius,
+      this.boneCount,
+      this.rotationAngle,
+      this.backgroundColor,
+    );
+  }
 
-    this.stroke(this.backgroundColor);
-    _covers(this.radius, this.boneCount, ({ x1, y1, x2, y2, x3, y3 }) => {
-      this.fill(this.backgroundColor);
-      this.triangle(x1, y1, x2, y2, x3, y3);
+  _drawBlock(
+    g,
+    radius,
+    boneCount,
+    rotationAngle,
+    backgroundColor,
+  ) {
+    g.stroke(backgroundColor);
+    _covers(radius, boneCount, ({ x1, y1, x2, y2, x3, y3 }) => {
+      g.fill(backgroundColor);
+      g.triangle(x1, y1, x2, y2, x3, y3);
     });
 
-    this.strokeWeight(2);
-    this.stroke(0);
-    _bones(this.radius, this.boneCount, ({ x1, y1, x2, y2 }) => {
-      this.line(x1, y1, x2, y2);
+    g.strokeWeight(2);
+    g.stroke(0);
+    _bones(radius, boneCount, ({ x1, y1, x2, y2 }) => {
+      g.line(x1, y1, x2, y2);
     });
 
-    this.fill(255);
-    this.circle(0, 0, 10);
+    g.fill(255);
+    g.circle(0, 0, 10);
   }
 }
 

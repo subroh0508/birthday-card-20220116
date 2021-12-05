@@ -8,11 +8,11 @@ export class P5Model {
 
   draw() {
     this.push();
-    this.drawBlock();
+    this.drawBlock(this);
     this.pop();
   }
 
-  drawBlock() {}
+  drawBlock(g) {}
 
   includes(_x, _y) { return false; }
 }

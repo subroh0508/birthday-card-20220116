@@ -7,15 +7,25 @@ const CircleBehavior = compose(Translatable, Rotatable)(P5Model);
 
 export class Circle extends CircleBehavior {
   radius = 0;
-  backgroundColor = null;
+  _backgroundColor = null;
 
   constructor(p5, args) {
     super(p5, args);
 
     const { radius, color } = args;
     this.radius = radius || 0;
-    this.backgroundColor = this.color(color);
+    this._backgroundColor = color;
   }
+
+  draw() {
+    this.push();
+    this.translate(this.translateX, this.translateY);
+    this.rotate(this.rotationAngle);
+    this.drawBlock(this);
+    this.pop();
+  }
+
+  get backgroundColor() { return this.color(this._backgroundColor); }
 
   diameter() { return this.radius * 2; }
 
