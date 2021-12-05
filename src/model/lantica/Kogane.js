@@ -1,5 +1,4 @@
 import { LanticaGear } from './LanticaGear';
-import { LANTICA_GEAR_TEETH_COUNT } from './constants';
 import { RotateDirection } from '../mixins/Rotatable';
 import { degToRad } from '../../utilities';
 
@@ -7,11 +6,10 @@ const KOGANE_RADIUS = 60;
 const KOGANE_BACK_DIAMETER = 80;
 const KOGANE_INNER_DIAMETER = 95;
 const KOGANE_ERASE_DIAMETER = 90;
-const KOGANE_INIT_RADIAN = Math.PI * 2 / (LANTICA_GEAR_TEETH_COUNT * 2 * 2);
 
 export class Kogane extends LanticaGear {
   constructor(p5, args) {
-    super(p5, { ...args, radius: KOGANE_RADIUS, initRadian: KOGANE_INIT_RADIAN });
+    super(p5, { ...args, radius: KOGANE_RADIUS });
   }
 
   draw() {
@@ -52,6 +50,7 @@ export class Kogane extends LanticaGear {
     this.drawBlock(g);
 
     g.fill(this.dark);
+    g.stroke(this.primary);
     g.ellipse(0, 0, KOGANE_INNER_DIAMETER);
 
     g.erase();
