@@ -12,6 +12,7 @@ export class Graph {
 
   forEach(callback) { this._graph.forEach(callback); }
 
+  get adjacencyList () { return this._adjacencyList; }
   set adjacencyList(adjacencyList) {
     this._adjacencyList = adjacencyList;
     this._graph = _initGraph(adjacencyList);
@@ -19,13 +20,14 @@ export class Graph {
 }
 
 const _initGraph = (initAdjacencyList) => {
-  let adjacencyList = Object.entries(initAdjacencyList).filter(([_, node]) => !node.length)
-    .sort(([_id1, node1], [_id2, node2]) => node1.length - node2.length);
+  let adjacencyList = Object.entries(initAdjacencyList).filter(([_, node]) => !!node.length)
+    .sort(([_id1, node1], [_id2, node2]) => node1.length - node2.length)
+    .map(([id, node]) => [Number(id), node]);
 
   const graph = [];
   while (!!Object.keys(adjacencyList).length) {
     const originId = adjacencyList[0] && adjacencyList[0][0];
-    const chainNode = _searchChainNode(originId, adjacencyList);
+    const chainNode = _searchChainNode(originId, Object.fromEntries(adjacencyList));
 
     graph.push(chainNode);
     adjacencyList = adjacencyList.filter(([id, _]) => !chainNode.includes(id));
@@ -45,8 +47,8 @@ const _searchChainNode = (originId, adjacencyList) => {
     const visit = nextVisits.shift();
     node.push(visit);
 
-    adjacencyList[visit].forEach(n => {
-      if (node.includes[n.id]) {
+    (adjacencyList[visit] || []).forEach(n => {
+      if (node.includes(n.id)) {
         return;
       }
 
