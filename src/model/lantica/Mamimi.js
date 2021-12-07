@@ -46,7 +46,6 @@ export class Mamimi extends LanticaGear {
     this.image(this._createGearFront(), -MAMIMI_RADIUS, -MAMIMI_RADIUS);
   }
 
-
   _createGearFront() {
     const g = this.createGraphics(MAMIMI_RADIUS * 2, MAMIMI_RADIUS * 2);
 
@@ -91,7 +90,7 @@ export class Mamimi extends LanticaGear {
 
     g.stroke(this.light);
     g.fill(this.light);
-    g.rect(6, -2, length, 4);
+    g.rect(6, -1, length, 2);
 
     g.translate(length, 0);
     g.stroke(this.light);

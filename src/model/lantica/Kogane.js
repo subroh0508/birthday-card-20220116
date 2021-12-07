@@ -4,7 +4,6 @@ import { degToRad } from '../../utilities';
 
 const KOGANE_RADIUS = 60;
 const KOGANE_BACK_DIAMETER = 80;
-const KOGANE_INNER_DIAMETER = 95;
 const KOGANE_ERASE_DIAMETER = 90;
 
 export class Kogane extends LanticaGear {
@@ -36,8 +35,8 @@ export class Kogane extends LanticaGear {
 
     this.fill(this.dark);
     this.stroke(this.dark);
-    this.rect(-KOGANE_INNER_DIAMETER / 2, -6.5, KOGANE_INNER_DIAMETER, 13);
-    this.rect(-6.5, -KOGANE_INNER_DIAMETER / 2, 13, KOGANE_INNER_DIAMETER);
+    this.rect(-KOGANE_ERASE_DIAMETER / 2, -6.5, KOGANE_ERASE_DIAMETER, 13);
+    this.rect(-6.5, -KOGANE_ERASE_DIAMETER / 2, 13, KOGANE_ERASE_DIAMETER);
 
     this.image(this._createGearFront(), -KOGANE_RADIUS, -KOGANE_RADIUS);
   }
@@ -51,15 +50,15 @@ export class Kogane extends LanticaGear {
 
     g.fill(this.dark);
     g.stroke(this.primary);
-    g.ellipse(0, 0, KOGANE_INNER_DIAMETER);
+    g.ellipse(0, 0, KOGANE_ERASE_DIAMETER + 5);
 
     g.erase();
     g.ellipse(0, 0, KOGANE_ERASE_DIAMETER);
     g.noErase();
 
     g.fill(this.primary);
-    g.rect(-KOGANE_INNER_DIAMETER / 2, -5, KOGANE_INNER_DIAMETER, 10);
-    g.rect(-5, -KOGANE_INNER_DIAMETER / 2, 10, KOGANE_INNER_DIAMETER);
+    g.rect(-KOGANE_ERASE_DIAMETER / 2, -5, KOGANE_ERASE_DIAMETER, 10);
+    g.rect(-5, -KOGANE_ERASE_DIAMETER / 2, 10, KOGANE_ERASE_DIAMETER);
 
     return g;
   }
@@ -90,7 +89,7 @@ export class Kogane extends LanticaGear {
 
     g.stroke(this.light);
     g.fill(this.light);
-    g.rect(6, -2, length / 2, 4);
+    g.rect(6, -1, length / 2, 2);
 
     g.translate(length / 2, 0);
     g.rect(24, -3, 6, 6);

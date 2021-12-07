@@ -6,7 +6,6 @@ const sketch = (p) => {
   const canvas = new Canvas(
     p,
     [
-      { radius: 50, teethCount: 20, color: '#AA0000', translate: { x: 500, y: 500 } },
       { radius: 50, teethCount: 20, color: '#00BB00', translate: { x: 600, y: 500 } },
       { radius: 50, teethCount: 20, color: '#0000CC', translate: { x: 700, y: 500 } },
       { radius: 50, teethCount: 20, color: '#001100', translate: { x: 500, y: 600 } },
