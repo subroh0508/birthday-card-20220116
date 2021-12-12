@@ -1,6 +1,3 @@
-import { Circle } from './model/abstract/Circle';
-import { Clock } from './model/abstract/Clock';
-
 let id = 0;
 
 export const TWO_PI = Math.PI * 2;
@@ -27,26 +24,30 @@ export const combination = (objects, k) => {
 
 export const degToRad = (degree) => Math.PI * 2 / 360 * degree;
 
-export const distance = (...args) => {
+export const distance = (model, ...args) => {
+  if (!model.hasOwnProperty('translateX') || !model.hasOwnProperty('translateY')) {
+    return -1;
+  }
+
   switch (args.length) {
     case 1:
-      const model = args[0];
-      return this._distanceFromModel(model);
+      const other = args[0];
+      return _distanceFromModel(model, other);
     case 2:
       const [x, y] = args;
-      return Math.sqrt(Math.pow(this.translateX - x, 2) + Math.pow(this.translateY - y, 2));
+      return Math.sqrt(Math.pow(model.translateX - x, 2) + Math.pow(model.translateY - y, 2));
     default:
       return -1;
   }
 };
 
-const _distanceFromModel = (model) => {
-  if (model instanceof Circle || model instanceof Clock) {
-    return this.distance(model.translateX, model.translateY);
+const _distanceFromModel = (modelA, modelB) => {
+  if (modelB.hasOwnProperty('translateX') && modelB.hasOwnProperty('translateY')) {
+    return distance(modelA, modelB.translateX, modelB.translateY);
   }
 
-  if (model.hasOwnProperty('x') && model.hasOwnProperty('y')) {
-    return this.distance(model.x, model.y);
+  if (modelB.hasOwnProperty('x') && modelB.hasOwnProperty('y')) {
+    return distance(modelA, modelB.x, modelB.y);
   }
 
   return -1;

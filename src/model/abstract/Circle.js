@@ -2,6 +2,7 @@ import compose from 'lodash/fp/compose';
 import { Translatable } from '../mixins/Translatable';
 import { Rotatable } from '../mixins/Rotatable';
 import { P5Model } from './P5Model';
+import { distance as calcDistance } from '../../utilities';
 
 const CircleBehavior = compose(Translatable, Rotatable)(P5Model);
 
@@ -29,10 +30,6 @@ export class Circle extends CircleBehavior {
 
   diameter() { return this.radius * 2; }
 
-  includes(mouseX, mouseY) {
-    return this.distance(mouseX, mouseY) <= this.radius;
-  }
-
   minDistance(model) {
     if (model instanceof Circle) {
       return this.radius + model.radius;
@@ -41,28 +38,6 @@ export class Circle extends CircleBehavior {
     return -1;
   }
 
-  distance(...args) {
-    switch (args.length) {
-      case 1:
-        const model = args[0];
-        return this._distanceFromModel(model);
-      case 2:
-        const [x, y] = args;
-        return Math.sqrt(Math.pow(this.translateX - x, 2) + Math.pow(this.translateY - y, 2));
-      default:
-        return -1;
-    }
-  }
-
-  _distanceFromModel(model) {
-    if (model instanceof Circle) {
-      return this.distance(model.translateX, model.translateY);
-    }
-
-    if (model.hasOwnProperty('x') && model.hasOwnProperty('y')) {
-      return this.distance(model.x, model.y);
-    }
-
-    return -1;
-  }
+  includes(mouseX, mouseY) { return this.distance(mouseX, mouseY) <= this.radius; }
+  distance(...args) { return calcDistance(this, ...args); }
 }
