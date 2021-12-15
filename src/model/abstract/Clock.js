@@ -31,7 +31,7 @@ export class Clock extends ClockBehavior {
 
     const secondAngle = TWO_PI * seconds / 60;
     const minuteAngle = TWO_PI * minutes / 60 + secondAngle / 60;
-    const hourAngle = TWO_PI * hours / 12 + minuteAngle / 60;
+    const hourAngle = TWO_PI * hours / 12 + minuteAngle / 12;
 
     return [hourAngle, minuteAngle, secondAngle];
   }
