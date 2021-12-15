@@ -6,6 +6,7 @@ const YUIKA_FACE_RADIUS = 260;
 const YUIKA_MINUTE_SCALE_DIAMETER = (YUIKA_FACE_RADIUS * 2) - 15;
 const YUIKA_LONG_HAND_LENGTH = YUIKA_FACE_RADIUS - ROMAN_NUMBER_GRAPHIC_SIZE - 30;
 const YUIKA_SHORT_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH - 70;
+const YUIKA_SHORT_HAND_WIDTH = 60;
 const YUIKA_SECOND_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH + 50;
 
 const YUIKA_CLOCK_COLOR_PRIMARY = '#EBA761';
@@ -95,7 +96,52 @@ export class Yuika extends Clock {
 
   _drawShortHand(angle) {
     this._drawHand(angle, () => {
-      this.rect(0, 0, YUIKA_SHORT_HAND_LENGTH, 2);
+      const offset = YUIKA_SECOND_HAND_LENGTH - YUIKA_LONG_HAND_LENGTH
+
+      const gWidth = YUIKA_SHORT_HAND_WIDTH + 20;
+      const g = this.createGraphics(YUIKA_SHORT_HAND_LENGTH + 30, YUIKA_SHORT_HAND_WIDTH + 20);
+
+      g.translate(0, gWidth / 2)
+      g.fill(YUIKA_CLOCK_HAND_COLOR);
+      g.stroke(YUIKA_CLOCK_HAND_COLOR);
+      g.rect(0, -2, offset, 4);
+      g.triangle(offset - 15, 7, offset - 15, -7, YUIKA_SHORT_HAND_LENGTH, 0);
+      g.triangle(offset, 18, offset, -18, YUIKA_SHORT_HAND_LENGTH - 30, 0);
+      g.arc(offset, 5, YUIKA_SHORT_HAND_WIDTH / 2, YUIKA_SHORT_HAND_WIDTH / 2, Math.PI / 2, Math.PI);
+      g.arc(offset, -5, YUIKA_SHORT_HAND_WIDTH / 2, YUIKA_SHORT_HAND_WIDTH / 2, Math.PI, -Math.PI / 2);
+      g.triangle(offset - 20, 10, offset - 13, 6, offset - 13, 12);
+      g.triangle(offset - 16, 18, offset - 13, 6, offset - 10, 16);
+      g.triangle(offset - 20, -10, offset - 13, -6, offset - 13, -12);
+      g.triangle(offset - 16, -18, offset - 13, -6, offset - 10, -16);
+
+      g.erase();
+      g.translate(offset, 10);
+      g.rotate(-Math.PI / 4);
+      g.rect(-3, 0, 8, 20);
+      g.rotate(Math.PI / 4);
+      g.translate(0, -20);
+      g.rotate(Math.PI / 4);
+      g.rect(-3, -20, 8, 20);
+      g.rotate(-Math.PI / 4);
+      g.translate(-offset, 10);
+      g.ellipse(offset - 2, 8, 8);
+      g.ellipse(offset - 2, -8, 8);
+      g.rotate(-Math.PI / 6);
+      g.ellipse(offset - 4, 36, 18, 6);
+      g.rotate(Math.PI / 6);
+      g.rotate(Math.PI / 6);
+      g.ellipse(offset - 4, -36, 18, 6);
+      g.rotate(-Math.PI / 6);
+      g.noErase();
+
+      g.fill(YUIKA_CLOCK_HAND_COLOR);
+      g.stroke(YUIKA_CLOCK_HAND_COLOR);
+      g.ellipse(offset, 18, 5.6);
+      g.ellipse(offset + 10, 12, 1.4);
+      g.ellipse(offset, -18, 5.6);
+      g.ellipse(offset + 10, -12, 1.4);
+
+      this.image(g, 0, -gWidth / 2);
     });
   }
 
