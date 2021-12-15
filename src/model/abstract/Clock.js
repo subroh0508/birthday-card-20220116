@@ -166,10 +166,10 @@ export class Clock extends ClockBehavior {
   }
 
   _drawRomanFive(offset, g) {
-    g.quad(-13, 0, -8, 0, 2.5, ROMAN_NUMBER_GRAPHIC_SIZE, -2.5, ROMAN_NUMBER_GRAPHIC_SIZE);
-    g.quad(8, 0, 11, 0, 2.5, ROMAN_NUMBER_GRAPHIC_SIZE, 0.5, ROMAN_NUMBER_GRAPHIC_SIZE);
-    g.rect(-14, 0, 7, 2);
-    g.rect(7, 0, 5, 2);
+    g.quad(-11, ROMAN_NUMBER_GRAPHIC_SIZE, -8, ROMAN_NUMBER_GRAPHIC_SIZE, 0.5, 0, -2.5, 0);
+    g.quad(8, ROMAN_NUMBER_GRAPHIC_SIZE, 13, ROMAN_NUMBER_GRAPHIC_SIZE, 2.5, 0, -2.5, 0);
+    g.rect(-12, ROMAN_NUMBER_GRAPHIC_SIZE - 2, 5, 2);
+    g.rect(7, ROMAN_NUMBER_GRAPHIC_SIZE - 2, 7, 2);
   }
 
   _drawRomanTen(offset, g) {
