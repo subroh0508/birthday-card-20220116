@@ -3,12 +3,13 @@ import { TWO_PI } from '../../utilities';
 
 const YUIKA_RADIUS = 300;
 const YUIKA_FACE_RADIUS = 260;
+const YUIKA_FACE_INNER_CIRCLE_RADIUS = 35;
 const YUIKA_MINUTE_SCALE_DIAMETER = (YUIKA_FACE_RADIUS * 2) - 15;
 const YUIKA_LONG_HAND_LENGTH = YUIKA_FACE_RADIUS - ROMAN_NUMBER_GRAPHIC_SIZE - 30;
 const YUIKA_SHORT_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH - 70;
 const YUIKA_LONG_HAND_WIDTH = 14;
 const YUIKA_SHORT_HAND_WIDTH = 60;
-const YUIKA_SECOND_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH + 50;
+const YUIKA_SECOND_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH + YUIKA_FACE_INNER_CIRCLE_RADIUS;
 
 const YUIKA_CLOCK_COLOR_PRIMARY = '#EBA761';
 const YUIKA_CLOCK_COLOR_LIGHT = '#D8DFC5';
@@ -67,6 +68,9 @@ export class Yuika extends Clock {
 
     this.fill(YUIKA_CLOCK_FACE_COLOR);
     this.ellipse(0, 0, YUIKA_MINUTE_SCALE_DIAMETER - 10);
+    this.strokeWeight(6);
+    this.ellipse(0, 0, YUIKA_FACE_INNER_CIRCLE_RADIUS * 2);
+    this.strokeWeight(1);
 
     this.fill(YUIKA_CLOCK_DIAL_COLOR);
     const textY = (YUIKA_MINUTE_SCALE_DIAMETER - 20) / 2 - ROMAN_NUMBER_GRAPHIC_SIZE;
@@ -91,7 +95,7 @@ export class Yuika extends Clock {
 
   _drawLongHand(angle) {
     this._drawHand(angle, () => {
-      const offset = (YUIKA_SECOND_HAND_LENGTH - YUIKA_LONG_HAND_LENGTH) * 2 - 20;
+      const offset = 80;
 
       const gWidth = YUIKA_LONG_HAND_WIDTH + 20;
       const g = this.createGraphics(YUIKA_LONG_HAND_LENGTH + 30, YUIKA_LONG_HAND_WIDTH + 20);
@@ -147,7 +151,7 @@ export class Yuika extends Clock {
 
   _drawShortHand(angle) {
     this._drawHand(angle, () => {
-      const offset = YUIKA_SECOND_HAND_LENGTH - YUIKA_LONG_HAND_LENGTH
+      const offset = 50;
 
       const gWidth = YUIKA_SHORT_HAND_WIDTH + 20;
       const g = this.createGraphics(YUIKA_SHORT_HAND_LENGTH + 30, YUIKA_SHORT_HAND_WIDTH + 20);
@@ -199,11 +203,8 @@ export class Yuika extends Clock {
   _drawSecondHand(angle) {
     this._drawHand(angle, () => {
       this.stroke(YUIKA_CLOCK_COLOR_LIGHT);
-      this.rect(0, -1.5, YUIKA_SECOND_HAND_LENGTH, 3);
-
-      const offset = YUIKA_LONG_HAND_LENGTH - YUIKA_SECOND_HAND_LENGTH;
-
-      this.quad(offset, 3, 0, 2, 0, -2, offset, -3);
+      this.rect(0, -1.5, YUIKA_SECOND_HAND_LENGTH - YUIKA_FACE_INNER_CIRCLE_RADIUS, 3);
+      this.quad(-YUIKA_FACE_INNER_CIRCLE_RADIUS, 3, 0, 2, 0, -2, -YUIKA_FACE_INNER_CIRCLE_RADIUS, -3);
       this.ellipse(0, 0, 12);
       this.noStroke();
       this.quad(-8, -1.5, 8, -1, 8, 1, -8, 1.5);
