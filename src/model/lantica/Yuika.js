@@ -6,6 +6,7 @@ const YUIKA_FACE_RADIUS = 260;
 const YUIKA_MINUTE_SCALE_DIAMETER = (YUIKA_FACE_RADIUS * 2) - 15;
 const YUIKA_LONG_HAND_LENGTH = YUIKA_FACE_RADIUS - ROMAN_NUMBER_GRAPHIC_SIZE - 30;
 const YUIKA_SHORT_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH - 70;
+const YUIKA_LONG_HAND_WIDTH = 14;
 const YUIKA_SHORT_HAND_WIDTH = 60;
 const YUIKA_SECOND_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH + 50;
 
@@ -83,14 +84,64 @@ export class Yuika extends Clock {
   _drawHands() {
     const [hourAngle, minuteAngle, secondAngle] = this.clockHandAngles;
 
-    this._drawSecondHand(secondAngle);
     this._drawShortHand(hourAngle);
     this._drawLongHand(minuteAngle);
+    this._drawSecondHand(secondAngle);
   }
 
   _drawLongHand(angle) {
     this._drawHand(angle, () => {
-      this.rect(0, 0, YUIKA_LONG_HAND_LENGTH, 2);
+      const offset = (YUIKA_SECOND_HAND_LENGTH - YUIKA_LONG_HAND_LENGTH) * 2 - 20;
+
+      const gWidth = YUIKA_LONG_HAND_WIDTH + 20;
+      const g = this.createGraphics(YUIKA_LONG_HAND_LENGTH + 30, YUIKA_LONG_HAND_WIDTH + 20);
+
+      g.fill(YUIKA_CLOCK_HAND_COLOR);
+      g.stroke(YUIKA_CLOCK_HAND_COLOR);
+      g.translate(10, gWidth / 2)
+      g.ellipse(0, 0, 14);
+      g.quad(0, YUIKA_LONG_HAND_WIDTH / 2, offset, 4, offset, -4, 0, -YUIKA_LONG_HAND_WIDTH / 2);
+      g.triangle(0, 5, 0, -5, YUIKA_LONG_HAND_LENGTH, 0);
+      g.triangle(offset, 4, offset, -4, offset + 30, 0);
+      g.triangle(offset + 60, 8, offset + 60, -8, YUIKA_LONG_HAND_LENGTH - 10, 0);
+      g.arc(25, 4, 20, 24, Math.PI, 0);
+      g.arc(54, 3, 20, 8, 0, Math.PI);
+      g.rotate(Math.PI / 6);
+      g.translate(38, -25);
+      g.ellipse(0, 0, 16, 8);
+      g.translate(-38, 25);
+      g.rotate(-Math.PI / 6);
+      g.translate(offset, 10);
+      g.rotate(-Math.PI / 12);
+      g.arc(0, 0, 50, 32, Math.PI + Math.PI / 12, -Math.PI / 12);
+      g.rotate(Math.PI / 12);
+      g.translate(-offset, -10);
+
+      g.erase();
+      g.ellipse(offset + 86, 10, 56, 16);
+      g.ellipse(offset + 86, -10, 56, 16);
+      g.translate(offset, 10);
+      g.rotate(-Math.PI / 12);
+      g.arc(0, 0, 40, 22, Math.PI + Math.PI / 12, Math.PI / 12);
+      g.rotate(Math.PI / 12);
+      g.translate(-offset, -10);
+      g.arc(25, 4, 20, 18, Math.PI, 0);
+      g.translate(48, 0);
+      g.rotate(Math.PI / 8);
+      g.ellipse(0, 0, 16, 6);
+      g.rotate(-Math.PI / 8);
+      g.translate(10, 1);
+      g.rotate(-Math.PI / 12);
+      g.ellipse(0, 0, 8, 6);
+      g.rotate(Math.PI / 12);
+      g.translate(-58, -1);
+      g.noErase();
+
+      g.fill(YUIKA_CLOCK_HAND_COLOR);
+      g.stroke(YUIKA_CLOCK_HAND_COLOR);
+      g.arc(25, 5, 20, 2, Math.PI, 0);
+
+      this.image(g, -10, -gWidth / 2);
     });
   }
 
@@ -147,7 +198,15 @@ export class Yuika extends Clock {
 
   _drawSecondHand(angle) {
     this._drawHand(angle, () => {
-      this.rect(YUIKA_LONG_HAND_LENGTH - YUIKA_SECOND_HAND_LENGTH, 0, YUIKA_SECOND_HAND_LENGTH, 2);
+      this.stroke(YUIKA_CLOCK_COLOR_LIGHT);
+      this.rect(0, -1.5, YUIKA_SECOND_HAND_LENGTH, 3);
+
+      const offset = YUIKA_LONG_HAND_LENGTH - YUIKA_SECOND_HAND_LENGTH;
+
+      this.quad(offset, 3, 0, 2, 0, -2, offset, -3);
+      this.ellipse(0, 0, 12);
+      this.noStroke();
+      this.quad(-8, -1.5, 8, -1, 8, 1, -8, 1.5);
     });
   }
 
