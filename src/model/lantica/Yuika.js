@@ -2,6 +2,8 @@ import { Clock, ROMAN_NUMBER_GRAPHIC_SIZE } from '../abstract/Clock';
 import { TWO_PI } from '../../utilities';
 
 const YUIKA_RADIUS = 300;
+const YUIKA_RING_RADIUS = 105;
+const YUIKA_CLOCK_HANDLE_WIDTH = ROMAN_NUMBER_GRAPHIC_SIZE + 6;
 const YUIKA_FACE_RADIUS = 260;
 const YUIKA_FACE_INNER_CIRCLE_RADIUS = 35;
 const YUIKA_MINUTE_SCALE_DIAMETER = (YUIKA_FACE_RADIUS * 2) - 15;
@@ -10,7 +12,6 @@ const YUIKA_SHORT_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH - 70;
 const YUIKA_LONG_HAND_WIDTH = 14;
 const YUIKA_SHORT_HAND_WIDTH = 60;
 const YUIKA_SECOND_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH + YUIKA_FACE_INNER_CIRCLE_RADIUS;
-const YUIKA_CLOCK_HANDLE_WIDTH = ROMAN_NUMBER_GRAPHIC_SIZE + 6;
 
 const YUIKA_CLOCK_COLOR_PRIMARY = '#EBA761';
 const YUIKA_CLOCK_COLOR_LIGHT = '#D8DFC5';
@@ -25,29 +26,47 @@ export class Yuika extends Clock {
   }
 
   draw() {
-    this.push();
-    this.translate(this.translateX, this.translateY);
     this._drawClock();
-    this.pop();
-
     this._drawHands();
   }
 
   _drawClock() {
+    this.push();
+    this.translate(this.translateX, this.translateY);
     this._drawHandle();
     this._drawFrame();
     this._drawFace();
+    this.pop();
   }
 
   _drawHandle() {
+    const offset = YUIKA_CLOCK_HANDLE_WIDTH / 2;
+
+    const g = this.createGraphics(YUIKA_RING_RADIUS * 2, YUIKA_RING_RADIUS * 2);
+    g.fill(YUIKA_CLOCK_COLOR_PRIMARY);
+    g.stroke(YUIKA_CLOCK_COLOR_DARK);
+    g.translate(YUIKA_RING_RADIUS, YUIKA_RING_RADIUS);
+    g.ellipse(0, 0, YUIKA_RING_RADIUS * 2);
+    g.ellipse(0, 0, YUIKA_RING_RADIUS * 2 - 28);
+    g.rect(-offset - 3, -YUIKA_RING_RADIUS + 5, offset * 2 + 6, 20);
+
+    g.erase();
+    g.ellipse(0, 0, YUIKA_RING_RADIUS * 2 - 30);
+    g.rect(-offset - 2, -YUIKA_RING_RADIUS, offset * 2 + 4, 20);
+    g.noErase();
+
+    g.arc(-offset - 3, -YUIKA_RING_RADIUS + 12, 12, 12, -Math.PI / 2, Math.PI / 2, this.CHORD);
+    g.arc(offset + 3, -YUIKA_RING_RADIUS + 12, 12, 12, Math.PI / 2, -Math.PI / 2, this.CHORD);
+
     this.fill(YUIKA_CLOCK_COLOR_PRIMARY);
     this.stroke(YUIKA_CLOCK_COLOR_DARK);
     this.rotate(Math.PI);
-    this.translate(0, YUIKA_RADIUS + 60);
+    this.translate(0, YUIKA_RADIUS + 120);
+    this.image(g, -YUIKA_RING_RADIUS, -YUIKA_RING_RADIUS + 3);
 
-    const offset = YUIKA_CLOCK_HANDLE_WIDTH / 2;
+    this.translate(0, -60);
     this.triangle(-offset, 0, offset, 0, 0, -60);
-    this.triangle(-offset + 10, 23, offset - 10, 23, 0, 28);
+    this.triangle(-offset + 12, 23, offset - 12, 23, 0, 28);
     this.rect(-offset + 10, 13, offset * 2 - 20, 10);
     this.quad(-offset, 5, offset, 5, offset - 5, 13, -offset + 5, 13);
 
