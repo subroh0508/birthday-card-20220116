@@ -10,6 +10,7 @@ const YUIKA_SHORT_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH - 70;
 const YUIKA_LONG_HAND_WIDTH = 14;
 const YUIKA_SHORT_HAND_WIDTH = 60;
 const YUIKA_SECOND_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH + YUIKA_FACE_INNER_CIRCLE_RADIUS;
+const YUIKA_CLOCK_HANDLE_WIDTH = ROMAN_NUMBER_GRAPHIC_SIZE + 6;
 
 const YUIKA_CLOCK_COLOR_PRIMARY = '#EBA761';
 const YUIKA_CLOCK_COLOR_LIGHT = '#D8DFC5';
@@ -33,8 +34,47 @@ export class Yuika extends Clock {
   }
 
   _drawClock() {
+    this._drawHandle();
     this._drawFrame();
     this._drawFace();
+  }
+
+  _drawHandle() {
+    this.fill(YUIKA_CLOCK_COLOR_PRIMARY);
+    this.stroke(YUIKA_CLOCK_COLOR_DARK);
+    this.rotate(Math.PI);
+    this.translate(0, YUIKA_RADIUS + 60);
+
+    const offset = YUIKA_CLOCK_HANDLE_WIDTH / 2;
+    this.triangle(-offset, 0, offset, 0, 0, -60);
+    this.triangle(-offset + 10, 23, offset - 10, 23, 0, 28);
+    this.rect(-offset + 10, 13, offset * 2 - 20, 10);
+    this.quad(-offset, 5, offset, 5, offset - 5, 13, -offset + 5, 13);
+
+    this.translate(0, -5);
+    const teethWidth = ROMAN_NUMBER_GRAPHIC_SIZE / 8;
+    [...Array(9)].reduce(start => {
+      this.fill(YUIKA_CLOCK_COLOR_DARK);
+      this.stroke(YUIKA_CLOCK_COLOR_DARK);
+      this.triangle(start, 10, start + teethWidth, 10, start + teethWidth / 2, 15);
+      this.triangle(start, 5, start + teethWidth, 5, start + teethWidth / 2, 0);
+      this.rect(start, 5, teethWidth, 5);
+      this.fill(YUIKA_CLOCK_COLOR_PRIMARY);
+      this.stroke(YUIKA_CLOCK_COLOR_PRIMARY);
+      this.triangle(start + 1, 9, start + teethWidth - 1, 9, start + teethWidth / 2, 14);
+      this.triangle(start + 1, 5, start + teethWidth - 1, 5, start + teethWidth / 2, 1);
+      this.rect(start + 1, 5, teethWidth - 2, 5);
+
+      return start + teethWidth;
+    }, -YUIKA_CLOCK_HANDLE_WIDTH / 2)
+    this.translate(0, -55);
+    this.fill(YUIKA_CLOCK_COLOR_PRIMARY);
+    this.stroke(YUIKA_CLOCK_COLOR_DARK);
+    this.arc(0, 30, YUIKA_CLOCK_HANDLE_WIDTH, YUIKA_CLOCK_HANDLE_WIDTH, -(Math.PI + Math.PI / 6), Math.PI / 6, this.CHORD);
+    this.arc(0, 0, ROMAN_NUMBER_GRAPHIC_SIZE, ROMAN_NUMBER_GRAPHIC_SIZE, -(Math.PI + Math.PI / 6), Math.PI / 6, this.CHORD);
+
+    this.translate(0, -YUIKA_RADIUS);
+    this.rotate(-Math.PI);
   }
 
   _drawFrame() {
