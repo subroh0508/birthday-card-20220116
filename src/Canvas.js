@@ -3,7 +3,7 @@ import { P5Controller } from './controller/P5Controller';
 import { Engageable } from './controller/mixins/Engageable';
 import Gear from './model/gear/index';
 import { Umbrella } from './model/Umbrella';
-import { Kiriko } from './model/lantica/Kiriko';
+import Kiriko from './model/lantica/kiriko/index';
 import { Kogane } from './model/lantica/Kogane';
 import { Mamimi } from './model/lantica/Mamimi';
 import { Sakuya } from './model/lantica/Sakuya';

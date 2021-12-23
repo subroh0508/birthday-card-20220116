@@ -1,6 +1,6 @@
 import { Layer } from '../abstract/Layer';
 
-export class FrontLayer extends Layer {
+export class GearFrontLayer extends Layer {
   constructor(graphics, { radius, innerRadius, teethCount }) {
     super(graphics, { x: radius, y: radius });
 
@@ -10,7 +10,7 @@ export class FrontLayer extends Layer {
   draw(radius, innerRadius, teethCount) {
     this.stroke(0);
     this.fill(0);
-    _arcs(
+    arcs(
       radius * 2,
       innerRadius * 2,
       teethCount,
@@ -24,7 +24,7 @@ export class FrontLayer extends Layer {
   }
 }
 
-const _arcs = (diameter, innerDiameter, teethCount, callback) => {
+export const arcs = (diameter, innerDiameter, teethCount, callback) => {
   const loopCount = teethCount * 2;
   const rad = Math.PI * 2 / loopCount;
 

@@ -6,3 +6,5 @@ export const LANTICA_INIT_RADIAN = Math.PI * 2 / (LANTICA_GEAR_TEETH_COUNT * 2 *
 export const LANTICA_GEAR_COLOR_PRIMARY = '#B68765'
 export const LANTICA_GEAR_COLOR_DARK = '#7C553C'
 export const LANTICA_GEAR_COLOR_LIGHT = '#FFD4A1'
+
+export const KIRIKO_RADIUS = 55;
