@@ -7,26 +7,32 @@ export default class Gear extends Circle {
   _layers = [];
 
   _teethHeight = 0;
+  _teethCount = 0;
 
   constructor(p5, args) {
     super(p5, args);
 
     this._teethHeight = this.radius * (1 - INNER_RADIUS_RATIO);
+    this._teethCount = args.teethCount;
+  }
+
+  setup() {
     this._layers = [
       new FrontLayer(
-        p5,
+        this.createGraphics(this.radius * 2, this.radius * 2),
         {
           radius: this.radius,
           innerRadius: this.innerRadius,
-          teethCount: args.teethCount,
+          teethCount: this.teethCount,
         },
       ),
-    ]
+    ];
   }
 
   get innerRadius() { return this.radius - this.teethHeight; }
   get innerDiameter() { return this.innerRadius * 2; }
   get teethHeight() { return this._teethHeight; }
+  get teethCount() { return this._teethCount; }
 
   minDistance(model) {
     if (model instanceof Gear) {
@@ -38,9 +44,10 @@ export default class Gear extends Circle {
 
   draw() {
     this.push();
-    this.rotate(this.rotationAngle);
     this._layers.forEach(layer => {
-      this.image(layer, this.translateX - layer.origin.x, this.translateY - layer.origin.y);
+      this.translate(this.translateX, this.translateY);
+      this.rotate(this.rotationAngle);
+      this.image(layer, -layer.origin.x, -layer.origin.y);
     });
     this.pop();
   }

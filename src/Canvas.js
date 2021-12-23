@@ -1,7 +1,7 @@
 import compose from 'lodash/fp/compose';
 import { P5Controller } from './controller/P5Controller';
 import { Engageable } from './controller/mixins/Engageable';
-import { Gear } from './model/Gear';
+import Gear from './model/gear/index';
 import { Umbrella } from './model/Umbrella';
 import { Kiriko } from './model/lantica/Kiriko';
 import { Kogane } from './model/lantica/Kogane';

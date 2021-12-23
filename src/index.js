@@ -24,6 +24,7 @@ const sketch = (p) => {
     p.createCanvas(p.windowWidth, p.windowHeight);
     p.background(100);
     p.frameRate(30);
+    canvas.setup();
   };
 
   p.windowResized = () => {

@@ -1,14 +1,10 @@
 import { Layer } from '../abstract/Layer';
 
 export class FrontLayer extends Layer {
-  constructor(p5, { radius, innerRadius, teethCount }) {
-    super(
-      p5,
-      { width: radius, height: radius },
-      { x: radius, y: radius },
-    );
+  constructor(graphics, { radius, innerRadius, teethCount }) {
+    super(graphics, { x: radius, y: radius });
 
-    draw(radius, innerRadius, teethCount);
+    this.draw(radius, innerRadius, teethCount);
   }
 
   draw(radius, innerRadius, teethCount) {

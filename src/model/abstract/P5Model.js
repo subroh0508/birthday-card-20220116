@@ -6,6 +6,8 @@ export class P5Model {
     this.id = genUniqId();
   }
 
+  setup() {}
+
   draw() {
     this.push();
     this.drawBlock(this);
