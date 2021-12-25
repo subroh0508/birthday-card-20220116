@@ -5,8 +5,13 @@ const KIRIKO_BACK_DIAMETER = 60;
 const KIRIKO_ERASE_DIAMETER = 75;
 
 export class GearFrameLayout extends LanticaLayerTheme {
-  constructor(graphics, { radius, innerRadius, teethCount }, order) {
-    super(graphics, { x: radius, y: radius }, order);
+  constructor(p5, { radius, innerRadius, teethCount }, order) {
+    super(
+      p5,
+      { width: radius * 2, height: radius * 2 },
+      { x: radius, y: radius },
+      order,
+    );
 
     this.draw(radius, innerRadius, teethCount);
   }

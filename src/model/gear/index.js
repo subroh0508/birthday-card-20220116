@@ -45,7 +45,8 @@ export default class Gear extends Circle {
   buildLayers() {
     return [
       new GearFrontLayer(
-        this.createGraphics(this.radius * 2, this.radius * 2),
+        this,
+        { width: this.radius * 2, height: this.radius * 2 },
         {
           radius: this.radius,
           innerRadius: this.innerRadius,

@@ -1,8 +1,8 @@
 import { LanticaLayerTheme } from '../LanticaLayerTheme';
 
 class ClockHandLayer extends LanticaLayerTheme {
-  constructor(graphics, origin, order, params) {
-    super(graphics, origin, order);
+  constructor(p5, size, origin, order, params) {
+    super(p5, size, origin, order);
 
     this.draw(params);
   }
@@ -57,9 +57,10 @@ class ClockHandLayer extends LanticaLayerTheme {
 }
 
 export class LongHandLayer extends ClockHandLayer {
-  constructor(graphics, order) {
+  constructor(p5, size, order) {
     super(
-      graphics,
+      p5,
+      size,
       { x: 5, y: 25 },
       order,
       {
@@ -73,9 +74,10 @@ export class LongHandLayer extends ClockHandLayer {
 }
 
 export class ShortHandLayer extends ClockHandLayer {
-  constructor(graphics, order) {
+  constructor(p5, size, order) {
     super(
-      graphics,
+      p5,
+      size,
       { x: 5, y: 25 },
       order,
       {
