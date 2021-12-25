@@ -1,6 +1,6 @@
 import { Layer } from '../abstract/Layer';
 
-export class GearFrontLayer extends Layer {
+export class GearLayer extends Layer {
   constructor(p5, size, { radius, innerRadius, teethCount }) {
     super(p5, size, { x: radius, y: radius });
 

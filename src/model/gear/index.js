@@ -1,5 +1,5 @@
 import { Circle } from '../abstract/Circle';
-import { GearFrontLayer } from "./GearFrontLayer";
+import { GearLayer } from "./GearLayer";
 
 const INNER_RADIUS_RATIO = 0.9;
 
@@ -44,7 +44,7 @@ export default class Gear extends Circle {
 
   buildLayers() {
     return [
-      new GearFrontLayer(
+      new GearLayer(
         this,
         { width: this.radius * 2, height: this.radius * 2 },
         {

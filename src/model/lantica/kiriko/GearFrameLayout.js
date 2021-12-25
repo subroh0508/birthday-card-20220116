@@ -1,4 +1,4 @@
-import { arcs } from '../../gear/GearFrontLayer';
+import { arcs } from '../../gear/GearLayer';
 import { LanticaLayerTheme } from '../LanticaLayerTheme';
 
 const KIRIKO_BACK_DIAMETER = 60;
