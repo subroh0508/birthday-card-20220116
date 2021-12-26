@@ -1,11 +1,9 @@
-import { Circle } from '../abstract/Circle';
-import { GearLayer } from "./GearLayer";
+import Circle from '../circle/index';
+import { GearLayer } from './GearLayer';
 
 const INNER_RADIUS_RATIO = 0.9;
 
 export default class Gear extends Circle {
-  _layers = [];
-
   _teethHeight = 0;
   _teethCount = 0;
 
@@ -16,11 +14,9 @@ export default class Gear extends Circle {
     this._teethCount = args.teethCount || 0;
   }
 
-  get innerRadius() { return this.radius - this.teethHeight; }
-  get innerDiameter() { return this.innerRadius * 2; }
   get teethHeight() { return this._teethHeight; }
   get teethCount() { return this._teethCount; }
-  get layers() { return this._layers; }
+  get innerRadius() { return this.radius - this.teethHeight; }
 
   minDistance(model) {
     if (model instanceof Gear) {
@@ -29,8 +25,6 @@ export default class Gear extends Circle {
 
     return super.minDistance(model);
   }
-
-  setup() { this._layers = this.buildLayers(); }
 
   draw() {
     this.push();
@@ -42,17 +36,5 @@ export default class Gear extends Circle {
     this.pop();
   }
 
-  buildLayers() {
-    return [
-      new GearLayer(
-        this,
-        { width: this.radius * 2, height: this.radius * 2 },
-        {
-          radius: this.radius,
-          innerRadius: this.innerRadius,
-          teethCount: this.teethCount,
-        },
-      ),
-    ];
-  }
+  buildLayers() { return [new GearLayer(this, this.radius, this.teethHeight, this.teethCount)]; }
 }

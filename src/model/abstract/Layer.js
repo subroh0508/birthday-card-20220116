@@ -18,6 +18,8 @@ export class Layer {
     this.translate(this.origin.x, this.origin.y);
   }
 
+  setup() {}
+
   get order() { return this._order; }
   get origin() { return this._origin; }
 }

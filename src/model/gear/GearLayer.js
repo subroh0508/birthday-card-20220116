@@ -1,19 +1,32 @@
-import { Layer } from '../abstract/Layer';
+import { CircleLayer } from '../circle/CircleLayer';
 
-export class GearLayer extends Layer {
-  constructor(p5, size, { radius, innerRadius, teethCount }) {
-    super(p5, size, { x: radius, y: radius });
+const INNER_RADIUS_RATIO = 0.9;
 
-    this.draw(radius, innerRadius, teethCount);
+export class GearLayer extends CircleLayer {
+  _teethHeight = 0;
+  _teethCount = 0;
+
+  constructor(p5, radius, teethHeight, teethCount, order) {
+    super(p5, radius, order);
+
+    this._teethHeight = teethHeight || this.radius * (1 - INNER_RADIUS_RATIO);
+    this._teethCount = teethCount || 0;
   }
 
-  draw(radius, innerRadius, teethCount) {
+  get teethHeight() { return this._teethHeight; }
+  get teethCount() { return this._teethCount; }
+  get innerRadius() { return this.radius - this.teethHeight; }
+  get innerDiameter() { return this.innerRadius * 2; }
+
+  setup() { this._draw(); }
+
+  _draw() {
     this.stroke(0);
     this.fill(0);
     arcs(
-      radius * 2,
-      innerRadius * 2,
-      teethCount,
+      this.radius * 2,
+      this.innerRadius * 2,
+      this.teethCount,
       ({ start, end, radius }) => {
         this.arc(0, 0, radius, radius, start, end, this.PIE);
       },
