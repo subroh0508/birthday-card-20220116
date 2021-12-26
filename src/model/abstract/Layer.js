@@ -15,11 +15,15 @@ export class Layer {
 
     Object.setPrototypeOf(Layer.prototype, Object.create(Element.prototype));
     Graphics.bind(this)(size.width, size.height, P2D, p5);
-    this.translate(this.origin.x, this.origin.y);
   }
-
-  setup() {}
 
   get order() { return this._order; }
   get origin() { return this._origin; }
+
+  draw() {}
+
+  setup() {
+    this.translate(this.origin.x, this.origin.y);
+    this.draw();
+  }
 }

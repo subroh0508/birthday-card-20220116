@@ -1,22 +1,14 @@
-import { arcs } from '../../gear/GearLayer';
-import { LanticaLayerTheme } from '../LanticaLayerTheme';
+import compose from 'lodash/fp/compose';
+import { GearLayer, arcs } from '../../gear/GearLayer';
+import { LanticaTheme } from '../theme/LanticaTheme';
+
+const ThemedGearLayer = compose(LanticaTheme)(GearLayer);
 
 const KIRIKO_BACK_DIAMETER = 60;
 const KIRIKO_ERASE_DIAMETER = 75;
 
-export class GearFrameLayout extends LanticaLayerTheme {
-  constructor(p5, { radius, innerRadius, teethCount }, order) {
-    super(
-      p5,
-      { width: radius * 2, height: radius * 2 },
-      { x: radius, y: radius },
-      order,
-    );
-
-    this.draw(radius, innerRadius, teethCount);
-  }
-
-  draw(radius, innerRadius, teethCount) {
+export class GearFrameLayout extends ThemedGearLayer {
+  draw() {
     this.fill(this.primary);
     this.stroke(this.primary);
     this.ellipse(0, 0, KIRIKO_BACK_DIAMETER);
@@ -32,9 +24,9 @@ export class GearFrameLayout extends LanticaLayerTheme {
     this.fill(this.primary);
     this.stroke(this.primary);
     arcs(
-      radius * 2,
-      innerRadius * 2,
-      teethCount,
+      this.radius * 2,
+      this.innerRadius * 2,
+      this.teethCount,
       ({ start, end, radius }) => {
         this.arc(0, 0, radius, radius, start, end, this.PIE);
       },

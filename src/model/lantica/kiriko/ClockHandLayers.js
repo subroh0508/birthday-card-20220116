@@ -1,25 +1,33 @@
-import { LanticaLayerTheme } from '../LanticaLayerTheme';
+import compose from 'lodash/fp/compose';
+import { Layer } from '../../abstract/Layer';
+import { LanticaTheme } from '../theme/LanticaTheme';
 
-class ClockHandLayer extends LanticaLayerTheme {
+const ThemedLayer = compose(LanticaTheme)(Layer);
+
+class ClockHandLayer extends ThemedLayer {
+  _params = {};
+
   constructor(p5, size, origin, order, params) {
     super(p5, size, origin, order);
 
-    this.draw(params);
+    this._params = params;
   }
 
-  draw(params) {
+  get params() { return this._params; }
+
+  draw() {
     this.stroke(this.light);
     this.fill(this.light);
     this.ellipse(0, 0, 6);
 
     this._drawDiamondFrame(
-      params.frameWidth,
-      params.frameHeight,
-      params.shaftLength,
-      params.beadsRadius,
+      this.params.frameWidth,
+      this.params.frameHeight,
+      this.params.shaftLength,
+      this.params.beadsRadius,
     );
 
-    this.translate(params.beadsRadius, 0);
+    this.translate(this.params.beadsRadius, 0);
     this._drawDiamond();
   }
 

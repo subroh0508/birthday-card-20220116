@@ -14,10 +14,8 @@ export class CircleLayer extends Layer {
     this._radius = radius || 0;
   }
 
-  setup() { this._draw(); }
-
   get radius() { return this._radius; }
   get diameter() { return this.radius * 2; }
 
-  _draw() { this.ellipse(0, 0, this.diameter); }
+  draw() { this.ellipse(0, 0, this.diameter); }
 }

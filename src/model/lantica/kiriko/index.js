@@ -31,11 +31,9 @@ export default class Kiriko extends LanticaGear {
     return [
       new GearFrameLayout(
         this,
-        {
-          radius: this.radius,
-          innerRadius: this.innerRadius,
-          teethCount: this.teethCount,
-        },
+        this.radius,
+        this.teethHeight,
+        this.teethCount,
         0,
       ),
       new ShortHandLayer(

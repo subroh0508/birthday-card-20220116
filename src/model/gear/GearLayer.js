@@ -18,9 +18,7 @@ export class GearLayer extends CircleLayer {
   get innerRadius() { return this.radius - this.teethHeight; }
   get innerDiameter() { return this.innerRadius * 2; }
 
-  setup() { this._draw(); }
-
-  _draw() {
+  draw() {
     this.stroke(0);
     this.fill(0);
     arcs(
