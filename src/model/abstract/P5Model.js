@@ -1,5 +1,4 @@
 import { genUniqId } from '../../utilities';
-import { GearLayer } from "../gear/GearLayer";
 
 export class P5Model {
   _layers = [];

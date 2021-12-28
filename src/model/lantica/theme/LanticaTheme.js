@@ -10,4 +10,4 @@ export const LanticaTheme = (Model) => class extends Model {
   get primary() { return this.color(LANTICA_GEAR_COLOR_PRIMARY); }
   get dark() { return this.color(LANTICA_GEAR_COLOR_DARK); }
   get light() { return this.color(LANTICA_GEAR_COLOR_LIGHT); }
-}
+};
