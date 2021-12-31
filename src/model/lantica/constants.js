@@ -9,3 +9,5 @@ export const LANTICA_GEAR_COLOR_LIGHT = '#FFD4A1'
 
 export const KIRIKO_RADIUS = 55;
 export const YUIKA_RADIUS = 300;
+export const YUIKA_FACE_RADIUS = 260;
+export const YUIKA_FACE_INNER_CIRCLE_RADIUS = 35;
