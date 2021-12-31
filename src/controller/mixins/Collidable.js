@@ -1,5 +1,5 @@
-import { Gear } from '../../model/Gear';
-import { Circle } from '../../model/abstract/Circle';
+import Gear from '../../model/gear/index';
+import Circle from '../../model/circle/index';
 import { Draggable } from './Draggable';
 
 export const Collidable = (P5Controller) => class extends Draggable(P5Controller) {
