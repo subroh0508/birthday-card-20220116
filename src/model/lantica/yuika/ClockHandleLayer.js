@@ -2,6 +2,7 @@ import compose from 'lodash/fp/compose';
 import { Layer } from '../../abstract/Layer';
 import { ROMAN_NUMBER_GRAPHIC_SIZE } from '../../abstract/Clock';
 import { ClockTheme } from '../theme/ClockTheme';
+import { YUIKA_RADIUS } from "../constants";
 
 const ThemedLayer = compose(ClockTheme)(Layer);
 
@@ -19,7 +20,7 @@ export class ClockHandleLayer extends ThemedLayer {
     );
   }
 
-  get translateY() { return YUIKA_RING_POSITION_Y; }
+  get translateY() { return YUIKA_RADIUS + YUIKA_RING_POSITION_Y; }
 
   draw() {
     const offset = YUIKA_CLOCK_HANDLE_WIDTH / 2;

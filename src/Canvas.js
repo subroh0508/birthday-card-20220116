@@ -7,7 +7,7 @@ import Kiriko from './model/lantica/kiriko/index';
 import { Kogane } from './model/lantica/Kogane';
 import { Mamimi } from './model/lantica/Mamimi';
 import { Sakuya } from './model/lantica/Sakuya';
-import { Yuika } from './model/lantica/Yuika';
+import Yuika from './model/lantica/Yuika/index';
 import { RotateDirection } from './model/mixins/Rotatable';
 
 const CanvasBehavior = compose(Engageable)(P5Controller);

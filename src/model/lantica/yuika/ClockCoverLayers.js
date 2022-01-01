@@ -9,6 +9,7 @@ const YUIKA_COVER_HEIGHT = 120;
 const YUIKA_COVER_DEPTH = 40;
 const YUIKA_COVER_HINGE_HEIGHT = 40;
 const YUIKA_COVER_HINGE_WIDTH = 150;
+const YUIKA_COVER_HINGE_POSITION_Y = YUIKA_COVER_HINGE_HEIGHT + 15;
 const YUIKA_COVER_THICKNESS = 30;
 const YUIKA_COVER_SURFACE_WIDTH = YUIKA_RADIUS * 2 - 20;
 const YUIKA_COVER_SURFACE_HEIGHT = 100;
@@ -22,6 +23,8 @@ export class ClockCoverFrameLayer extends ThemedLayer {
       order,
     );
   }
+
+  get translateY() { return -YUIKA_COVER_HINGE_POSITION_Y; }
 
   draw() {
     this.fill(this.primary);
@@ -59,7 +62,7 @@ export class ClockCoverHingeLayer extends ThemedLayer {
     );
   }
 
-  get translateY() { return YUIKA_COVER_HINGE_HEIGHT + YUIKA_COVER_HEIGHT / 2 - 4; }
+  get translateY() { return YUIKA_COVER_HINGE_HEIGHT; }
 
   draw() {
     this.fill(0);
@@ -95,6 +98,8 @@ export class ClockCoverSurfaceLayer extends ThemedLayer {
       order,
     );
   }
+
+  get translateY() { return -YUIKA_COVER_HINGE_POSITION_Y; }
 
   setup() { this.draw(); }
 
