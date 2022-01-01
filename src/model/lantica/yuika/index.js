@@ -5,7 +5,10 @@ import { distance as calcDistance, TWO_PI } from '../../../utilities';
 import { ClockHandle } from './ClockHandle';
 import { ClockCover } from './ClockCover';
 import { ClockFace } from './ClockFace';
-import { YUIKA_RADIUS } from "../constants";
+import { YUIKA_RADIUS } from '../constants';
+import { ClockShortHandLayer } from './ClockHandLayers';
+import { ClockLongHandLayer } from './ClockHandLayers';
+import { ClockSecondHandLayer } from './ClockHandLayers';
 
 const ClockBehavior = compose(Translatable)(P5Model);
 
@@ -24,19 +27,29 @@ export default class Yuika extends ClockBehavior {
   }
 
   get parts() { return this._parts; }
+  get hands() { return this._hands; }
 
   get handle() { return this.parts[0]; }
   get face() { return this.parts[1]; }
   get cover() { return this.parts[2]; }
 
-  setup() { this.parts.forEach(part => part.setup()); }
+  setup() {
+    const hands = [
+      new ClockShortHandLayer(this, 0),
+      new ClockLongHandLayer(this, 1),
+      new ClockSecondHandLayer(this, 2),
+    ];
+    this.parts.forEach(part => part.setup());
+    hands.forEach(hand => hand.setup());
+    this._hands = hands;
+  }
 
   draw() {
     this._drawClock();
     this._drawHands();
   }
 
-  includes(x, y) { return this.parts.some(layer => layer.includes(x, y)); }
+  includes(x, y) { return this.parts.some(part => part.includes(this, x, y)); }
 
   get _now() {
     const date = new Date(Date.now());
@@ -68,10 +81,16 @@ export default class Yuika extends ClockBehavior {
   }
 
   _drawHands() {
-    const [hour, minute, second] = this._clockHandAngles;
+    this._clockHandAngles.forEach((angle, i) => {
+      this._drawHand(angle, this.hands[i]);
+    });
+  }
 
-    //this._drawShortHand(hour);
-    //this._drawLongHand(minute);
-    //this._drawSecondHand(second);
+  _drawHand(angle, hand) {
+    this.push();
+    this.translate(this.translateX, this.translateY);
+    this.rotate(angle);
+    this.image(hand, -hand.origin.x, -hand.origin.y);
+    this.pop();
   }
 }

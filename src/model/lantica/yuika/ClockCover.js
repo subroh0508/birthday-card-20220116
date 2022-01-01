@@ -12,6 +12,8 @@ export class ClockCover extends P5Model {
     });
   }
 
+  includes(obj, mouseX, mouseY) { return false; }
+
   buildLayers() {
     return [
       new ClockCoverHingeLayer(this, 0),

@@ -12,8 +12,7 @@ export class ClockFace extends P5Model {
     });
   }
 
-  includes(mouseX, mouseY) { return this.distance(mouseX, mouseY) <= this.radius; }
-  distance(...args) { return calcDistance(this, ...args); }
+  includes(obj, mouseX, mouseY) { return calcDistance(obj, mouseX, mouseY) <= this.radius; }
 
   buildLayers() {
     return [

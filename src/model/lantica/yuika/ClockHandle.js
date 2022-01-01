@@ -8,6 +8,8 @@ export class ClockHandle extends P5Model {
     this.translate(0, this.layers[0].translateY);
   }
 
+  includes(obj, mouseX, mouseY) { return false; }
+
   buildLayers() {
     return [new ClockHandleLayer(this, 0)];
   }
