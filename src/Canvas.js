@@ -4,7 +4,7 @@ import { Engageable } from './controller/mixins/Engageable';
 import Gear from './model/gear/index';
 import { Umbrella } from './model/Umbrella';
 import Kiriko from './model/lantica/kiriko/index';
-import { Kogane } from './model/lantica/Kogane';
+import Kogane from './model/lantica/Kogane/index';
 import { Mamimi } from './model/lantica/Mamimi';
 import { Sakuya } from './model/lantica/Sakuya';
 import Yuika from './model/lantica/Yuika/index';
