@@ -17,33 +17,33 @@ export class GearLayer extends CircleLayer {
   get teethCount() { return this._teethCount; }
   get innerRadius() { return this.radius - this.teethHeight; }
   get innerDiameter() { return this.innerRadius * 2; }
+  get teethWidth() { return this.diameter * Math.PI / (this.teethCount * 2); }
 
   draw() {
     this.stroke(0);
     this.fill(0);
-    arcs(
-      this.radius * 2,
-      this.innerRadius * 2,
-      this.teethCount,
-      ({ start, end, radius }) => {
-        this.arc(0, 0, radius, radius, start, end, this.PIE);
-      },
-    );
+    this.frame(this.teethWidth, this.teethWidth);
 
     this.fill(255);
     this.ellipse(0, 0, 10);
   }
+
+  frame(startWidth, endWidth) {
+    const rad = Math.PI * 2 / this.teethCount;
+
+    this.ellipse(0, 0, this.innerDiameter);
+    [...Array(this.teethCount)].forEach(() => {
+      this.rotate(rad);
+      this.quad(
+        this.innerRadius,
+        -startWidth / 2,
+        this.radius,
+        -endWidth / 2,
+        this.radius,
+        endWidth / 2,
+        this.innerRadius,
+        startWidth / 2,
+      );
+    });
+  }
 }
-
-export const arcs = (diameter, innerDiameter, teethCount, callback) => {
-  const loopCount = teethCount * 2;
-  const rad = Math.PI * 2 / loopCount;
-
-  [...Array(loopCount)].reduce((start, _, i) => {
-    const radius = i % 2 === 0 ? innerDiameter : diameter;
-
-    callback({ start, end: start + rad, radius });
-
-    return start + rad;
-  }, 0);
-};

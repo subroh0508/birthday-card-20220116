@@ -2,7 +2,7 @@ import { LanticaGear } from '../LanticaGear';
 import { SAKUYA_RADIUS } from '../constants';
 import { GearOuterLayer, GearInnerLayer } from './GearFrameLayers';
 
-const SAKUYA_GEAR_TEETH_HEIGHT = 12;
+const SAKUYA_GEAR_TEETH_HEIGHT = 16;
 
 export default class Sakuya extends LanticaGear {
   constructor(p5, args) {

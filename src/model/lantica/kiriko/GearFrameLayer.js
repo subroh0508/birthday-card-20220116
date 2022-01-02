@@ -1,5 +1,5 @@
 import compose from 'lodash/fp/compose';
-import { GearLayer, arcs } from '../../gear/GearLayer';
+import { GearLayer } from '../../gear/GearLayer';
 import { LanticaTheme } from '../theme/LanticaTheme';
 
 const ThemedGearLayer = compose(LanticaTheme)(GearLayer);
@@ -19,18 +19,11 @@ export class GearFrameLayer extends ThemedGearLayer {
       this.rotate(2 * Math.PI / 5);
       this.rect(KIRIKO_BACK_DIAMETER / 2 - 2, -6.5, 15, 13);
     });
-    this.rotate(0);
 
     this.fill(this.primary);
     this.stroke(this.primary);
-    arcs(
-      this.radius * 2,
-      this.innerRadius * 2,
-      this.teethCount,
-      ({ start, end, radius }) => {
-        this.arc(0, 0, radius, radius, start, end, this.PIE);
-      },
-    );
+    this.frame(this.teethWidth, this.teethWidth - 2);
+
     this.fill(this.dark);
     this.stroke(this.primary);
     this.ellipse(0, 0, KIRIKO_ERASE_DIAMETER + 5);
