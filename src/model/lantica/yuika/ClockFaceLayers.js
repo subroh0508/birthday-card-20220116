@@ -1,7 +1,6 @@
 import compose from 'lodash/fp/compose';
 import { Layer } from '../../abstract/Layer';
-import { ROMAN_NUMBER_GRAPHIC_SIZE } from '../../abstract/Clock';
-import { YUIKA_RADIUS, YUIKA_FACE_RADIUS } from '../constants';
+import { ROMAN_NUMBER_GRAPHIC_SIZE, YUIKA_RADIUS, YUIKA_FACE_RADIUS } from '../constants';
 import { ClockTheme } from '../theme/ClockTheme';
 import { TWO_PI } from '../../../utilities';
 

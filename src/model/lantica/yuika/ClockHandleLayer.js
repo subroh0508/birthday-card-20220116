@@ -1,8 +1,7 @@
 import compose from 'lodash/fp/compose';
 import { Layer } from '../../abstract/Layer';
-import { ROMAN_NUMBER_GRAPHIC_SIZE } from '../../abstract/Clock';
 import { ClockTheme } from '../theme/ClockTheme';
-import { YUIKA_RADIUS } from "../constants";
+import { ROMAN_NUMBER_GRAPHIC_SIZE, YUIKA_RADIUS } from "../constants";
 
 const ThemedLayer = compose(ClockTheme)(Layer);
 

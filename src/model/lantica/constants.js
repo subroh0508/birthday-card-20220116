@@ -11,6 +11,8 @@ export const KIRIKO_RADIUS = 55;
 export const KOGANE_RADIUS = 60;
 export const MAMIMI_RADIUS = 55;
 export const SAKUYA_RADIUS = 75;
+
+export const ROMAN_NUMBER_GRAPHIC_SIZE = 48;
 export const YUIKA_RADIUS = 300;
 export const YUIKA_FACE_RADIUS = 260;
 export const YUIKA_FACE_INNER_CIRCLE_RADIUS = 35;
