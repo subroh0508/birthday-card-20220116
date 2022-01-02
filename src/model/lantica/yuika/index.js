@@ -64,11 +64,11 @@ export default class Yuika extends ClockBehavior {
   get _clockHandAngles() {
     const [hours, minutes, seconds] = this._now;
 
-    const secondAngle = (TWO_PI * seconds / 60) - Math.PI / 2;
-    const minuteAngle = (TWO_PI * minutes / 60 + secondAngle / 60) - Math.PI / 2;
-    const hourAngle = (TWO_PI * hours / 12 + minuteAngle / 12) - Math.PI / 2;
+    const secondAngle = TWO_PI * seconds / 60;
+    const minuteAngle = TWO_PI * minutes / 60 + secondAngle / 60;
+    const hourAngle = TWO_PI * hours / 12 + minuteAngle / 12;
 
-    return [hourAngle, minuteAngle, secondAngle];
+    return [hourAngle - Math.PI / 2, minuteAngle - Math.PI / 2, secondAngle - Math.PI / 2];
   }
 
   _drawClock() {
