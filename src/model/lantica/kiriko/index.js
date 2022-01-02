@@ -1,6 +1,6 @@
 import { LanticaGear } from '../LanticaGear';
 import { KIRIKO_RADIUS } from '../constants';
-import { GearFrameLayout } from './GearFrameLayout';
+import { GearFrameLayer } from './GearFrameLayer';
 import { ShortHandLayer, LongHandLayer } from './ClockHandLayers';
 
 export default class Kiriko extends LanticaGear {
@@ -29,7 +29,7 @@ export default class Kiriko extends LanticaGear {
 
   buildLayers() {
     return [
-      new GearFrameLayout(
+      new GearFrameLayer(
         this,
         this.radius,
         this.teethHeight,

@@ -7,7 +7,7 @@ const ThemedGearLayer = compose(LanticaTheme)(GearLayer);
 const KIRIKO_BACK_DIAMETER = 60;
 const KIRIKO_ERASE_DIAMETER = 75;
 
-export class GearFrameLayout extends ThemedGearLayer {
+export class GearFrameLayer extends ThemedGearLayer {
   draw() {
     this.fill(this.primary);
     this.stroke(this.primary);
