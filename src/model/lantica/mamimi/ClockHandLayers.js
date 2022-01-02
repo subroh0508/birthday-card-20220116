@@ -1,7 +1,6 @@
 import compose from 'lodash/fp/compose';
 import { Layer } from '../../abstract/Layer';
 import { LanticaTheme } from '../theme/LanticaTheme';
-import { KOGANE_RADIUS } from "../constants";
 
 const ThemedLayer = compose(LanticaTheme)(Layer);
 
