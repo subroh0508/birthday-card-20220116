@@ -1,34 +1,22 @@
 import compose from 'lodash/fp/compose';
 import { Translatable } from '../mixins/Translatable';
 import { Rotatable } from '../mixins/Rotatable';
-import { P5Model } from './P5Model';
+import { P5Model } from '../abstract/P5Model';
 import { distance as calcDistance } from '../../utilities';
+import { CircleLayer } from './CircleLayer';
 
 const CircleBehavior = compose(Translatable, Rotatable)(P5Model);
 
-export class Circle extends CircleBehavior {
-  radius = 0;
-  _backgroundColor = null;
+export default class Circle extends CircleBehavior {
+  _radius = 0
 
   constructor(p5, args) {
     super(p5, args);
 
-    const { radius, color } = args;
-    this.radius = radius || 0;
-    this._backgroundColor = color;
+    this._radius = args.radius || 0;
   }
 
-  draw() {
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.rotate(this.rotationAngle);
-    this.drawBlock(this);
-    this.pop();
-  }
-
-  get backgroundColor() { return this.color(this._backgroundColor); }
-
-  diameter() { return this.radius * 2; }
+  get radius() { return this._radius };
 
   minDistance(model) {
     if (model instanceof Circle) {
@@ -40,4 +28,6 @@ export class Circle extends CircleBehavior {
 
   includes(mouseX, mouseY) { return this.distance(mouseX, mouseY) <= this.radius; }
   distance(...args) { return calcDistance(this, ...args); }
+
+  buildLayers() { return [new CircleLayer(this, this.radius)]; }
 }

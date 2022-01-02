@@ -1,10 +1,7 @@
-import { Gear } from '../Gear';
+import Gear from '../gear/index';
 import {
   LANTICA_GEAR_TEETH_COUNT,
   LANTICA_GEAR_TEETH_HEIGHT,
-  LANTICA_GEAR_COLOR_PRIMARY,
-  LANTICA_GEAR_COLOR_DARK,
-  LANTICA_GEAR_COLOR_LIGHT,
   LANTICA_INIT_RADIAN,
 } from './constants';
 
@@ -14,17 +11,32 @@ export class LanticaGear extends Gear {
       p5,
       {
         ...args,
-        initRadian: LANTICA_INIT_RADIAN,
         teethHeight: args.teethHeight || LANTICA_GEAR_TEETH_HEIGHT,
+        teethCount: LANTICA_GEAR_TEETH_COUNT,
       }
    );
 
-    this.teethCount = LANTICA_GEAR_TEETH_COUNT;
+    this._initRadian = LANTICA_INIT_RADIAN;
   }
 
-  get backgroundColor() { return this.primary; }
+  get gears() { return [] };
+  get clockHands() { return [] };
 
-  get primary() { return this.color(LANTICA_GEAR_COLOR_PRIMARY); }
-  get dark() { return this.color(LANTICA_GEAR_COLOR_DARK); }
-  get light() { return this.color(LANTICA_GEAR_COLOR_LIGHT); }
+  draw() {
+    this.push();
+    this.translate(this.translateX, this.translateY);
+    this.rotate(this.rotationAngle);
+    this.gears.forEach(gear => {
+      this.image(gear, -gear.origin.x, -gear.origin.y);
+    });
+    this.pop();
+
+    this.clockHands.forEach(hand => {
+      this.push();
+      this.translate(this.translateX, this.translateY);
+      this.rotate(hand.angle);
+      this.image(hand, -hand.origin.x, -hand.origin.y);
+      this.pop();
+    });
+  }
 }
