@@ -1,6 +1,6 @@
 import { LanticaGear } from '../LanticaGear';
 import { KOGANE_RADIUS } from '../constants';
-import { GearFrameLayout } from './GearFrameLayout';
+import { GearFrameLayer } from './GearFrameLayer';
 import { ShortHandLayer, LongHandLayer } from './ClockHandLayers';
 
 export default class Kogane extends LanticaGear {
@@ -32,7 +32,7 @@ export default class Kogane extends LanticaGear {
 
   buildLayers() {
     return [
-      new GearFrameLayout(
+      new GearFrameLayer(
         this,
         this.radius,
         this.teethHeight,

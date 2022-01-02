@@ -7,17 +7,8 @@ const ThemedGearLayer = compose(LanticaTheme)(GearLayer);
 const KOGANE_BACK_DIAMETER = 80;
 const KOGANE_ERASE_DIAMETER = 90;
 
-export class GearFrameLayout extends ThemedGearLayer {
+export class GearFrameLayer extends ThemedGearLayer {
   draw() {
-    this.fill(this.primary);
-    this.stroke(this.primary);
-    this.ellipse(0, 0, KOGANE_BACK_DIAMETER);
-
-    this.fill(this.dark);
-    this.stroke(this.dark);
-    this.rect(-KOGANE_ERASE_DIAMETER / 2, -6.5, KOGANE_ERASE_DIAMETER, 13);
-    this.rect(-6.5, -KOGANE_ERASE_DIAMETER / 2, 13, KOGANE_ERASE_DIAMETER);
-
     this.fill(this.primary);
     this.stroke(this.primary);
     arcs(
@@ -31,14 +22,24 @@ export class GearFrameLayout extends ThemedGearLayer {
 
     this.fill(this.dark);
     this.stroke(this.primary);
-    this.ellipse(0, 0, KOGANE_ERASE_DIAMETER + 5);
+    this.ellipse(0, 0, KOGANE_ERASE_DIAMETER + 6);
 
     this.erase();
     this.ellipse(0, 0, KOGANE_ERASE_DIAMETER);
     this.noErase();
 
     this.fill(this.primary);
-    this.rect(-KOGANE_ERASE_DIAMETER / 2, -5, KOGANE_ERASE_DIAMETER, 10);
-    this.rect(-5, -KOGANE_ERASE_DIAMETER / 2, 10, KOGANE_ERASE_DIAMETER);
+    this.stroke(this.primary);
+    this.ellipse(0, 0, KOGANE_BACK_DIAMETER);
+
+    this.fill(this.dark);
+    this.stroke(this.dark);
+    this.rect(-KOGANE_ERASE_DIAMETER / 2, -6.5, KOGANE_ERASE_DIAMETER, 13);
+    this.rect(-6.5, -KOGANE_ERASE_DIAMETER / 2, 13, KOGANE_ERASE_DIAMETER);
+
+    this.fill(this.primary);
+    this.stroke(this.primary);
+    this.rect(-KOGANE_ERASE_DIAMETER / 2 - 4, -5, KOGANE_ERASE_DIAMETER + 8, 10);
+    this.rect(-5, -KOGANE_ERASE_DIAMETER / 2 - 4, 10, KOGANE_ERASE_DIAMETER + 8);
   }
 }
