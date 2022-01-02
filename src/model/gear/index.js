@@ -30,9 +30,7 @@ export default class Gear extends Circle {
     this.push();
     this.translate(this.translateX, this.translateY);
     this.rotate(this.rotationAngle);
-    this.layers.forEach(layer => {
-      this.image(layer, -layer.origin.x, -layer.origin.y);
-    });
+    this.drawLayers();
     this.pop();
   }
 

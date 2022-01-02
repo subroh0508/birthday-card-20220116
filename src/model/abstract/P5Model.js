@@ -18,11 +18,13 @@ export class P5Model {
 
   draw() {
     this.push();
-    this.drawBlock(this);
+    this.drawLayers();
     this.pop();
   }
 
-  drawBlock(g) {}
+  drawLayers() {
+    this.layers.forEach(layer => this.image(layer, -layer.origin.x, -layer.origin.y));
+  }
 
   includes(_x, _y) { return false; }
 
