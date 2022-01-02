@@ -14,6 +14,7 @@ class ClockHandLayer extends ThemedLayer {
   }
 
   get params() { return this._params; }
+  get angle() { return 0; }
 
   draw() {
     this.stroke(this.light);
@@ -66,6 +67,8 @@ export class LongHandLayer extends ClockHandLayer {
       },
     );
   }
+
+  get angle() { return Math.PI / 3; }
 }
 
 export class ShortHandLayer extends ClockHandLayer {

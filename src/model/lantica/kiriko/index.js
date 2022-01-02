@@ -8,24 +8,8 @@ export default class Kiriko extends LanticaGear {
     super(p5, { ...args, radius: KIRIKO_RADIUS });
   }
 
-  draw() {
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.rotate(this.rotationAngle);
-    this.image(this.layers[0], -this.layers[0].origin.x, -this.layers[0].origin.y);
-    this.pop();
-
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.rotate(Math.PI / 3);
-    this.image(this.layers[1], -this.layers[1].origin.x, -this.layers[1].origin.y);
-    this.pop();
-
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.image(this.layers[2], -this.layers[2].origin.x, -this.layers[2].origin.y);
-    this.pop();
-  }
+  get gears() { return this.layers.slice(0, 1); }
+  get clockHands() { return this.layers.slice(1); }
 
   buildLayers() {
     return [

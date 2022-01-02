@@ -16,6 +16,7 @@ class ClockHandLayer extends ThemedLayer {
   }
 
   get length() { return this._length; }
+  get angle() { return 0; }
 
   draw() {
     this.stroke(this.light);
@@ -57,6 +58,8 @@ export class LongHandLayer extends ClockHandLayer {
       KOGANE_RADIUS * 1.5,
     );
   }
+
+  get angle() { return Math.PI / 3; }
 }
 
 export class ShortHandLayer extends ClockHandLayer {

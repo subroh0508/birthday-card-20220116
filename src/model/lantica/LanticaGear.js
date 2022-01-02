@@ -18,4 +18,25 @@ export class LanticaGear extends Gear {
 
     this._initRadian = LANTICA_INIT_RADIAN;
   }
+
+  get gears() { return [] };
+  get clockHands() { return [] };
+
+  draw() {
+    this.push();
+    this.translate(this.translateX, this.translateY);
+    this.rotate(this.rotationAngle);
+    this.gears.forEach(gear => {
+      this.image(gear, -gear.origin.x, -gear.origin.y);
+    });
+    this.pop();
+
+    this.clockHands.forEach(hand => {
+      this.push();
+      this.translate(this.translateX, this.translateY);
+      this.rotate(hand.angle);
+      this.image(hand, -hand.origin.x, -hand.origin.y);
+      this.pop();
+    });
+  }
 }

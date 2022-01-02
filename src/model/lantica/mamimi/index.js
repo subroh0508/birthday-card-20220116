@@ -9,28 +9,7 @@ export default class Mamimi extends LanticaGear {
   }
 
   get gears() { return this.layers.slice(0, 2); }
-  get hands() { return this.layers.slice(2); }
-
-  draw() {
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.rotate(this.rotationAngle);
-    this.gears.forEach(gear => {
-      this.image(gear, -gear.origin.x, -gear.origin.y);
-    })
-    this.pop();
-
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.rotate(Math.PI / 3);
-    this.image(this.hands[0], -this.hands[0].origin.x, -this.hands[0].origin.y);
-    this.pop();
-
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.image(this.hands[1], -this.hands[1].origin.x, -this.hands[1].origin.y);
-    this.pop();
-  }
+  get clockHands() { return this.layers.slice(2); }
 
   buildLayers() {
     return [
