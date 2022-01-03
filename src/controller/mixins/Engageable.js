@@ -8,6 +8,7 @@ export const Engageable = (P5Controller) => class extends Chainable(P5Controller
   _graph = null;
 
   get hasPowerObjects() { return this.target.filter(t => t.hasPower); }
+  get isRotatingAll() { return this.target.every(t => !t.isStopped); }
 
   mousePressed() {
     super.mousePressed();
