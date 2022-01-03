@@ -31,11 +31,9 @@ export class StarLayer extends P5Layer {
 
   draw(hasPower) {
     this.clear();
-    /*
     if (!hasPower) {
       return;
     }
-    */
 
     if (this.waitFrames >= 0) {
       this._wait();

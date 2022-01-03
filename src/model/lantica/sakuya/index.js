@@ -1,4 +1,4 @@
-import { LanticaGear } from '../LanticaGear';
+import LanticaGear from '../LanticaGear';
 import { SAKUYA_RADIUS } from '../constants';
 import { GearOuterLayer, GearInnerLayer } from './GearFrameLayers';
 
@@ -18,16 +18,6 @@ export default class Sakuya extends LanticaGear {
   }
 
   get gears() { return this.layers; }
-
-  draw() {
-    this.push();
-    this.translate(this.translateX, this.translateY);
-    this.rotate(this.rotationAngle);
-    this.gears.forEach(gear => {
-      this.image(gear, -gear.origin.x, -gear.origin.y);
-    })
-    this.pop();
-  }
 
   buildLayers() {
     return [

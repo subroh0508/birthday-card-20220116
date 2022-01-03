@@ -4,8 +4,13 @@ import {
   LANTICA_GEAR_TEETH_HEIGHT,
   LANTICA_INIT_RADIAN,
 } from './constants';
+import compose from 'lodash/fp/compose';
+import { LanticaTheme } from './theme/LanticaTheme';
+import { GearLayer } from '../gear/GearLayer';
 
-export class LanticaGear extends Gear {
+const ThemedGearLayer = compose(LanticaTheme)(GearLayer);
+
+export default class LanticaGear extends Gear {
   constructor(p5, args) {
     super(
       p5,
@@ -19,7 +24,7 @@ export class LanticaGear extends Gear {
     this._initRadian = LANTICA_INIT_RADIAN;
   }
 
-  get gears() { return [] };
+  get gears() { return this.layers; };
   get clockHands() { return [] };
 
   draw() {
@@ -38,5 +43,17 @@ export class LanticaGear extends Gear {
       this.image(hand, -hand.origin.x, -hand.origin.y);
       this.pop();
     });
+  }
+
+  buildLayers() {
+    return [
+      new ThemedGearLayer(
+        this,
+        this.radius,
+        this.teethHeight,
+        this.teethCount,
+        0,
+      ),
+    ];
   }
 }

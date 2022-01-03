@@ -1,4 +1,4 @@
-import { LanticaGear } from '../LanticaGear';
+import LanticaGear from '../LanticaGear';
 import { KIRIKO_RADIUS } from '../constants';
 import { GearFrameLayer } from './GearFrameLayer';
 import { ShortHandLayer, LongHandLayer } from './ClockHandLayers';

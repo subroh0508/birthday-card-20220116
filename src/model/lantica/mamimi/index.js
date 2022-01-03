@@ -1,4 +1,4 @@
-import { LanticaGear } from '../LanticaGear';
+import LanticaGear from '../LanticaGear';
 import { MAMIMI_RADIUS } from '../constants';
 import { GearOuterLayer, GearInnerLayer } from './GearFrameLayers';
 import { ShortHandLayer, LongHandLayer } from './ClockHandLayers';

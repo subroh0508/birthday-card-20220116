@@ -19,12 +19,20 @@ export class GearLayer extends CircleLayer {
   get innerDiameter() { return this.innerRadius * 2; }
   get teethWidth() { return this.diameter * Math.PI / (this.teethCount * 2); }
 
+  get primary() { return '#000000'; }
+  get dark() { return '#000000'; }
+  get light() { return '#000000'; }
+
   draw() {
-    this.stroke(0);
-    this.fill(0);
+    this.stroke(this.primary);
+    this.fill(this.primary);
     this.frame(this.teethWidth, this.teethWidth);
 
-    this.fill(255);
+    this.stroke(this.light);
+    this.fill(this.light);
+    this.ellipse(0, 0, 14);
+    this.stroke(this.primary);
+    this.fill(this.primary);
     this.ellipse(0, 0, 10);
   }
 
