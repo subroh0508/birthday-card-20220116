@@ -9,6 +9,7 @@ import { YUIKA_RADIUS } from '../constants';
 import { ClockShortHandLayer } from './ClockHandLayers';
 import { ClockLongHandLayer } from './ClockHandLayers';
 import { ClockSecondHandLayer } from './ClockHandLayers';
+import { ClockBlurLayer } from './ClockBlurLayer';
 
 const ClockBehavior = compose(Translatable)(P5Model);
 
@@ -37,6 +38,8 @@ export default class Yuika extends ClockBehavior {
   get face() { return this.parts[1]; }
   get cover() { return this.parts[2]; }
 
+  get blur() { return this.layers.slice(-1)[0]; }
+
   setup() {
     this.parts.forEach(part => part.setup());
     super.setup();
@@ -45,6 +48,7 @@ export default class Yuika extends ClockBehavior {
   draw(hasPower) {
     this._drawClock();
     this._drawHands(hasPower);
+    this._drawBlur(hasPower);
   }
 
   includes(x, y) { return this.parts.some(part => part.includes(this, x, y)); }
@@ -54,6 +58,7 @@ export default class Yuika extends ClockBehavior {
       new ClockShortHandLayer(this, 0),
       new ClockLongHandLayer(this, 1),
       new ClockSecondHandLayer(this, 2),
+      new ClockBlurLayer(this, 3),
     ];
   }
 
@@ -79,6 +84,14 @@ export default class Yuika extends ClockBehavior {
     this.translate(this.translateX, this.translateY);
     this.rotate(angle);
     this.image(hand, -hand.origin.x, -hand.origin.y);
+    this.pop();
+  }
+
+  _drawBlur(hasPower) {
+    this.push();
+    this.translate(this.translateX, this.translateY);
+    this.blur.draw(hasPower);
+    this.image(this.blur, -this.blur.origin.x, -this.blur.origin.y);
     this.pop();
   }
 
