@@ -83,16 +83,19 @@ export default class Yuika extends ClockBehavior {
   }
 
   _clockHandAngles(hasPower) {
-    const clockTimes = hasPower ? this._now : this._clockTimes;
-    this._clockTimes = clockTimes;
+    if (!hasPower) {
+      return _calcHandAngles(...this._clockTimes);
+    }
 
-    const [hours, minutes, seconds] = clockTimes;
+    const [nowHours, nowMinutes, nowSeconds] = this._now;
+    const [hours, minutes, seconds] = this._clockTimes;
 
-    const secondAngle = TWO_PI * seconds / 60;
-    const minuteAngle = TWO_PI * minutes / 60 + secondAngle / 60;
-    const hourAngle = TWO_PI * hours / 12 + minuteAngle / 12;
-
-    return [hourAngle - Math.PI / 2, minuteAngle - Math.PI / 2, secondAngle - Math.PI / 2];
+    this._clockTimes = [
+      nowHours === hours ? nowHours : (hours + 1) % 12,
+      nowMinutes === minutes ? nowMinutes : (minutes + 1) % 60,
+      nowSeconds === seconds ? nowSeconds : (seconds + 1) % 60,
+    ];
+    return _calcHandAngles(...this._clockTimes);
   }
 }
 
@@ -102,4 +105,12 @@ const _buildClockTimes = (milliSeconds, timezoneOffset) => {
   const hour = Math.trunc(minutes / 60 - timezoneOffset);
 
   return [hour % 12, minutes % 60, seconds % 60];
+};
+
+const _calcHandAngles = (hours, minutes, seconds) => {
+  const secondAngle = TWO_PI * seconds / 60;
+  const minuteAngle = TWO_PI * minutes / 60 + secondAngle / 60;
+  const hourAngle = TWO_PI * hours / 12 + minuteAngle / 12;
+
+  return [hourAngle - Math.PI / 2, minuteAngle - Math.PI / 2, secondAngle - Math.PI / 2];
 }
