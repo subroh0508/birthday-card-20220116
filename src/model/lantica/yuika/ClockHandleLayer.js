@@ -1,9 +1,9 @@
 import compose from 'lodash/fp/compose';
-import { Layer } from '../../abstract/Layer';
+import { P5Layer } from '../../abstract/P5Layer';
 import { ClockTheme } from '../theme/ClockTheme';
 import { ROMAN_NUMBER_GRAPHIC_SIZE, YUIKA_RADIUS } from "../constants";
 
-const ThemedLayer = compose(ClockTheme)(Layer);
+const ThemedLayer = compose(ClockTheme)(P5Layer);
 
 const YUIKA_RING_RADIUS = 105;
 const YUIKA_CLOCK_HANDLE_WIDTH = ROMAN_NUMBER_GRAPHIC_SIZE + 6;

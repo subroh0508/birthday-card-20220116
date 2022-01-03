@@ -1,10 +1,10 @@
 import compose from 'lodash/fp/compose';
-import { Layer } from '../../abstract/Layer';
+import { P5Layer } from '../../abstract/P5Layer';
 import { LanticaTheme } from '../theme/LanticaTheme';
 import { degToRad } from '../../../utilities';
 import { KOGANE_RADIUS } from "../constants";
 
-const ThemedLayer = compose(LanticaTheme)(Layer);
+const ThemedLayer = compose(LanticaTheme)(P5Layer);
 
 class ClockHandLayer extends ThemedLayer {
   _length = 0;

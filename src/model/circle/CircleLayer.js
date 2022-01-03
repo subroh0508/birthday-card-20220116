@@ -1,6 +1,6 @@
-import { Layer } from '../abstract/Layer';
+import { P5Layer } from '../abstract/P5Layer';
 
-export class CircleLayer extends Layer {
+export class CircleLayer extends P5Layer {
   _radius = 0;
 
   constructor(p5, radius, order) {

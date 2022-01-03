@@ -1,9 +1,9 @@
 import compose from 'lodash/fp/compose';
-import { Layer } from '../../abstract/Layer';
+import { P5Layer } from '../../abstract/P5Layer';
 import { ROMAN_NUMBER_GRAPHIC_SIZE, YUIKA_FACE_RADIUS, YUIKA_FACE_INNER_CIRCLE_RADIUS } from '../constants';
 import { ClockTheme } from '../theme/ClockTheme';
 
-const ThemedLayer = compose(ClockTheme)(Layer);
+const ThemedLayer = compose(ClockTheme)(P5Layer);
 
 const YUIKA_LONG_HAND_LENGTH = YUIKA_FACE_RADIUS - ROMAN_NUMBER_GRAPHIC_SIZE - 30;
 const YUIKA_SHORT_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH - 70;

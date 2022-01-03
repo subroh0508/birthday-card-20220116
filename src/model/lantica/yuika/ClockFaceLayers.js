@@ -1,10 +1,10 @@
 import compose from 'lodash/fp/compose';
-import { Layer } from '../../abstract/Layer';
+import { P5Layer } from '../../abstract/P5Layer';
 import { ROMAN_NUMBER_GRAPHIC_SIZE, YUIKA_RADIUS, YUIKA_FACE_RADIUS } from '../constants';
 import { ClockTheme } from '../theme/ClockTheme';
 import { TWO_PI } from '../../../utilities';
 
-const ThemedLayer = compose(ClockTheme)(Layer);
+const ThemedLayer = compose(ClockTheme)(P5Layer);
 
 const YUIKA_FACE_INNER_CIRCLE_RADIUS = 35;
 const YUIKA_MINUTE_SCALE_DIAMETER = (YUIKA_FACE_RADIUS * 2) - 15;

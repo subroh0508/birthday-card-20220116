@@ -1,9 +1,9 @@
 import compose from 'lodash/fp/compose';
-import { Layer } from '../../abstract/Layer';
+import { P5Layer } from '../../abstract/P5Layer';
 import { YUIKA_RADIUS } from '../constants';
 import { ClockTheme } from '../theme/ClockTheme';
 
-const ThemedLayer = compose(ClockTheme)(Layer);
+const ThemedLayer = compose(ClockTheme)(P5Layer);
 
 const YUIKA_COVER_HEIGHT = 120;
 const YUIKA_COVER_DEPTH = 40;

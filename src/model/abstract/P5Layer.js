@@ -1,6 +1,6 @@
 import { Element, Graphics, P2D } from 'p5';
 
-export class Layer {
+export class P5Layer {
   _order = 0;
   _origin = { x: 0, y: 0 };
 
@@ -13,7 +13,7 @@ export class Layer {
     this._order = order;
     this._origin = origin;
 
-    Object.setPrototypeOf(Layer.prototype, Object.create(Element.prototype));
+    Object.setPrototypeOf(P5Layer.prototype, Object.create(Element.prototype));
     Graphics.bind(this)(size.width, size.height, P2D, p5);
   }
 
