@@ -23,14 +23,14 @@ const sketch = (p) => {
   };
 
   p.setup = () => {
-    p.createCanvas(p.windowWidth, p.windowHeight);
+    p.createCanvas(Canvas.Width, Canvas.Height);
     p.background(0);
     p.frameRate(30);
     canvas.setup();
   };
 
   p.windowResized = () => {
-    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    //p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 
   p.draw = () => {

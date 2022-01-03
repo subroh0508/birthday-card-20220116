@@ -9,6 +9,21 @@ const StarBehavior = compose(Translatable)(P5Model);
 const STAR_RADIUS = 15;
 
 export default class Star extends StarBehavior {
+  static effects(p5, width, height) {
+    return [...Array(100)].reduce((p) => {
+      let candidate = '';
+      while (p.includes(candidate)) {
+        candidate = `${Math.random() * width},${Math.random() * height}`;
+      }
+
+      return [...p, candidate];
+    }, []).map(p => {
+      const [x, y] = p.split(',');
+
+      return new Star(p5, { translate: { x, y }});
+    });
+  }
+
   get needPower() { return true; }
   get layer() { return this.layers[0]; }
 

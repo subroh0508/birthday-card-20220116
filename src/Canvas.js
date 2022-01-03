@@ -14,6 +14,9 @@ import Star from './model/star';
 const CanvasBehavior = compose(Engageable)(P5Controller);
 
 export class Canvas extends CanvasBehavior {
+  static get Width() { return 1729; }
+  static get Height() { return 1045; }
+
   gears = [];
   umbrellas = [];
 
@@ -31,7 +34,7 @@ export class Canvas extends CanvasBehavior {
       new Kogane(p5, { translate: { x: 200, y: 92 }, direction: RotateDirection.LEFT }),
       new Mamimi(p5, { translate: { x: 300, y: 250 }, direction: RotateDirection.LEFT }),
       new Kiriko(p5, { translate: { x: 350, y: 92 }, direction: RotateDirection.RIGHT }),
-      new Star(p5, { translate: { x: 350, y: 92 }}),
+      ...Star.effects(p5, Canvas.Width, Canvas.Height),
     ];
     this.umbrellas = umbrellas.map((umbrella) => new Umbrella(p5, umbrella));
   }
