@@ -8,7 +8,7 @@ export const Engageable = (P5Controller) => class extends Chainable(P5Controller
   _graph = null;
 
   get hasPowerObjects() { return this.target.filter(t => t.hasPower); }
-  get isRotatingAll() { return this.target.every(t => !t.isStopped); }
+  get isRotatingAll() { return this.target.filter(t => this._hasDirection(t)).every(t => !t.isStopped()); }
 
   mousePressed() {
     super.mousePressed();
@@ -41,6 +41,8 @@ export const Engageable = (P5Controller) => class extends Chainable(P5Controller
       ),
     );
   }
+
+  _hasDirection(obj) { return obj.hasOwnProperty('_direction'); }
 }
 
 const _initAdjacencyList = (target) => combination(target, 2).reduce((acc, [objA, objB]) => {

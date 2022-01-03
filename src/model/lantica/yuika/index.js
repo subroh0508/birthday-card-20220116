@@ -14,7 +14,8 @@ const ClockBehavior = compose(Translatable)(P5Model);
 
 export default class Yuika extends ClockBehavior {
   _parts = [];
-  _hands = [];
+  _timezoneOffset = new Date().getTimezoneOffset() / 60;
+  _clockTimes = [];
 
   constructor(p5, args) {
     super(p5, { ...args, radius: YUIKA_RADIUS });
@@ -24,52 +25,39 @@ export default class Yuika extends ClockBehavior {
       new ClockFace(p5),
       new ClockCover(p5),
     ];
+    this._clockTimes = _buildClockTimes(
+      Math.trunc(Math.random() * 1000 * 60 * 60 * 24),
+      this._timezoneOffset,
+    );
   }
 
   get parts() { return this._parts; }
-  get hands() { return this._hands; }
 
   get handle() { return this.parts[0]; }
   get face() { return this.parts[1]; }
   get cover() { return this.parts[2]; }
 
   setup() {
-    const hands = [
-      new ClockShortHandLayer(this, 0),
-      new ClockLongHandLayer(this, 1),
-      new ClockSecondHandLayer(this, 2),
-    ];
     this.parts.forEach(part => part.setup());
-    hands.forEach(hand => hand.setup());
-    this._hands = hands;
+    super.setup();
   }
 
-  draw() {
+  draw(hasPower) {
     this._drawClock();
-    this._drawHands();
+    this._drawHands(hasPower);
   }
 
   includes(x, y) { return this.parts.some(part => part.includes(this, x, y)); }
 
-  get _now() {
-    const date = new Date(Date.now());
-
+  buildLayers() {
     return [
-      date.getHours() % 12,
-      date.getMinutes(),
-      date.getSeconds(),
+      new ClockShortHandLayer(this, 0),
+      new ClockLongHandLayer(this, 1),
+      new ClockSecondHandLayer(this, 2),
     ];
   }
 
-  get _clockHandAngles() {
-    const [hours, minutes, seconds] = this._now;
-
-    const secondAngle = TWO_PI * seconds / 60;
-    const minuteAngle = TWO_PI * minutes / 60 + secondAngle / 60;
-    const hourAngle = TWO_PI * hours / 12 + minuteAngle / 12;
-
-    return [hourAngle - Math.PI / 2, minuteAngle - Math.PI / 2, secondAngle - Math.PI / 2];
-  }
+  get _now() { return _buildClockTimes(Date.now(), this._timezoneOffset); }
 
   _drawClock() {
     this.push();
@@ -80,9 +68,9 @@ export default class Yuika extends ClockBehavior {
     this.pop();
   }
 
-  _drawHands() {
-    this._clockHandAngles.forEach((angle, i) => {
-      this._drawHand(angle, this.hands[i]);
+  _drawHands(hasPower) {
+    this._clockHandAngles(hasPower).forEach((angle, i) => {
+      this._drawHand(angle, this.layers[i]);
     });
   }
 
@@ -93,4 +81,25 @@ export default class Yuika extends ClockBehavior {
     this.image(hand, -hand.origin.x, -hand.origin.y);
     this.pop();
   }
+
+  _clockHandAngles(hasPower) {
+    const clockTimes = hasPower ? this._now : this._clockTimes;
+    this._clockTimes = clockTimes;
+
+    const [hours, minutes, seconds] = clockTimes;
+
+    const secondAngle = TWO_PI * seconds / 60;
+    const minuteAngle = TWO_PI * minutes / 60 + secondAngle / 60;
+    const hourAngle = TWO_PI * hours / 12 + minuteAngle / 12;
+
+    return [hourAngle - Math.PI / 2, minuteAngle - Math.PI / 2, secondAngle - Math.PI / 2];
+  }
+}
+
+const _buildClockTimes = (milliSeconds, timezoneOffset) => {
+  const seconds = Math.trunc(milliSeconds / 1000);
+  const minutes = Math.trunc(seconds / 60);
+  const hour = Math.trunc(minutes / 60 - timezoneOffset);
+
+  return [hour % 12, minutes % 60, seconds % 60];
 }

@@ -40,4 +40,15 @@ export class Canvas extends CanvasBehavior {
       ...this.umbrellas,
     ];
   }
+
+  draw() {
+    this.target.forEach(t => {
+      if (t instanceof Yuika) {
+        t.draw(this.isRotatingAll);
+        return;
+      }
+
+      t.draw();
+    });
+  }
 }
