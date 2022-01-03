@@ -13,6 +13,8 @@ import LanticaGear from './model/lantica/LanticaGear';
 
 const CanvasBehavior = compose(Engageable)(P5Controller);
 
+const GEAR_BUILDING_AREA = { minX: 100, maxX: 1000, minY: 350, maxY: 800 };
+
 export class Canvas extends CanvasBehavior {
   static get Width() { return 1729; }
   static get Height() { return 1045; }
@@ -22,21 +24,20 @@ export class Canvas extends CanvasBehavior {
 
   constructor(
     p5,
-    gears = [],
     umbrellas = [],
   ) {
     super(p5);
 
     this.gears = [
-      new Yuika(p5, { translate: { x: 900, y: 600 } }),
-      ...gears.map((gear) => new LanticaGear(p5, gear)),
-      new Sakuya(p5, { translate: { x: 92, y: 200 }, direction: RotateDirection.RIGHT }),
-      new Kogane(p5, { translate: { x: 200, y: 92 }, direction: RotateDirection.LEFT }),
-      new Mamimi(p5, { translate: { x: 300, y: 250 }, direction: RotateDirection.LEFT }),
-      new Kiriko(p5, { translate: { x: 350, y: 92 }, direction: RotateDirection.RIGHT }),
+      new Yuika(p5, { translate: { x: 1400, y: 550 } }),
+      ...LanticaGear.build(p5, GEAR_BUILDING_AREA),
+      new Sakuya(p5, { translate: { x: 100, y: 100 }, direction: RotateDirection.RIGHT }),
+      new Kogane(p5, { translate: { x: 250, y: 100 }, direction: RotateDirection.LEFT }),
+      new Mamimi(p5, { translate: { x: 400, y: 100 }, direction: RotateDirection.LEFT }),
+      new Kiriko(p5, { translate: { x: 550, y: 100 }, direction: RotateDirection.RIGHT }),
       ...Star.effects(p5, Canvas.Width, Canvas.Height),
     ];
-    this.umbrellas = umbrellas.map((umbrella) => new Umbrella(p5, umbrella));
+    //this.umbrellas = umbrellas.map((umbrella) => new Umbrella(p5, umbrella));
   }
 
   get target() {

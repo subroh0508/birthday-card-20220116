@@ -22,6 +22,15 @@ export const combination = (objects, k) => {
   return comb;
 };
 
+// see: https://www.nxworld.net/js-array-shuffle.html
+export const shuffle = (array) => {
+  for (let i = array.length - 1; i >= 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 export const degToRad = (degree) => Math.PI * 2 / 360 * degree;
 
 export const distance = (model, ...args) => {

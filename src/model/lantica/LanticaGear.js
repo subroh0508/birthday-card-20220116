@@ -7,11 +7,30 @@ import {
 import compose from 'lodash/fp/compose';
 import { LanticaTheme } from './theme/LanticaTheme';
 import { GearLayer } from '../gear/GearLayer';
-import { TWO_PI } from '../../utilities';
+import { shuffle, TWO_PI } from '../../utilities';
 
 const ThemedGearLayer = compose(LanticaTheme)(GearLayer);
 
+const FRAME_TYPES = [1, 2, 3, 4, 5, 6];
+const MIN_RADIUS = 30;
+const MAX_RADIUS = 65;
+
 export default class LanticaGear extends Gear {
+  static build(p5, { minX, maxX, minY, maxY }) {
+    return shuffle([...FRAME_TYPES, ...FRAME_TYPES]).reduce((acc, frameType) => {
+      let newGear = null;
+
+      do {
+        const [x, y] = _calcTranslatePoint(minX, maxX, minY, maxY);
+        const radius = _calcRadius();
+
+        newGear = new LanticaGear(p5, { radius, translate: { x, y }, frameType });
+      } while (acc.find(gear => gear.distance(newGear) < gear.minDistance(newGear) + 10));
+
+      return [...acc, newGear];
+    }, []);
+  }
+
   _frameType = -1;
 
   constructor(p5, args) {
@@ -54,6 +73,31 @@ export default class LanticaGear extends Gear {
         0,
       ),
     ];
+  }
+}
+
+const _calcTranslatePoint = (minX, maxX, minY, maxY) => [
+  Math.random() * (maxX - minX + 1) + minX,
+  Math.random() * (maxY - minY + 1) + minY,
+]
+
+const RADIUS_WEIGHT = [
+  { range: [MIN_RADIUS, MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) / 3], weight: 0.1 },
+  { range: [MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) / 3, MAX_RADIUS - (MAX_RADIUS - MIN_RADIUS) / 3], weight: 0.2 },
+  { range: [MAX_RADIUS - (MAX_RADIUS - MIN_RADIUS) / 3, MAX_RADIUS], weight: 0.7 },
+]
+const _calcRadius = () => {
+  const rand = Math.random();
+  let position = 0.0;
+
+  for (const item of RADIUS_WEIGHT) {
+    position += item.weight;
+
+    if (rand < position) {
+      const [min, max] = item.range;
+
+      return Math.random() * (max - min + 1) + min;
+    }
   }
 }
 
@@ -170,24 +214,22 @@ class GearFrameLayer extends ThemedGearLayer {
     this.ellipse(0, 0, patternDiameter - 30);
 
     const rad = TWO_PI / 3;
-    const diff = TWO_PI / 24;
     [...Array(3)].forEach((_, i) => {
       this.rotate(rad);
       this.stroke(this.dark);
-      this.arc(0, 0, patternDiameter, patternDiameter, -diff / 2, diff / 2, this.PIE);
-      this.rect(0, -3, patternDiameter / 2 - 11, 6);
+      this.rect(0, -4, patternDiameter / 2 - 1, 8);
       this.stroke(this.primary);
-      this.rect(0, -2, patternDiameter / 2 - 10, 4);
+      this.rect(0, -3, patternDiameter / 2 - 1, 6);
     });
 
     this.stroke(this.dark);
-    this.ellipse(0, 0, 12);
+    this.ellipse(0, 0, 14);
 
     [...Array(3)].forEach((_, i) => {
       this.rotate(rad);
       this.stroke(this.dark);
       this.stroke(this.primary);
-      this.rect(4, -2, 5, 4);
+      this.rect(4, -3, 5, 6);
     });
   }
 
@@ -202,14 +244,12 @@ class GearFrameLayer extends ThemedGearLayer {
     this.ellipse(0, 0, patternDiameter - 40);
 
     const rad = TWO_PI / 5;
-    const diff = TWO_PI / 24;
     [...Array(5)].forEach((_, i) => {
       this.rotate(rad);
       this.stroke(this.dark);
-      this.arc(0, 0, patternDiameter, patternDiameter, -diff / 2, diff / 2, this.PIE);
-      this.rect(5, -3, patternDiameter / 2 - 16, 6);
+      this.rect(5, -3, patternDiameter / 2 - 5, 6);
       this.stroke(this.primary);
-      this.rect(4, -2, patternDiameter / 2 - 14, 4);
+      this.rect(4, -2, patternDiameter / 2 - 5, 4);
     });
 
     this.stroke(this.primary);
