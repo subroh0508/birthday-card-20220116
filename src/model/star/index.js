@@ -3,6 +3,7 @@ import { Translatable } from '../mixins/Translatable';
 import { P5Model } from '../abstract/P5Model';
 import { distance as calcDistance } from '../../utilities';
 import { StarLayer } from './StarLayer';
+import { LANTICA_COLORS } from "../lantica/constants";
 
 const StarBehavior = compose(Translatable)(P5Model);
 
@@ -17,13 +18,23 @@ export default class Star extends StarBehavior {
       }
 
       return [...p, candidate];
-    }, []).map(p => {
+    }, []).map((p, i) => {
       const [x, y] = p.split(',');
+      const color = LANTICA_COLORS[i % 5];
 
-      return new Star(p5, { translate: { x, y }});
+      return new Star(p5, { translate: { x, y }, color });
     });
   }
 
+  _color = '#FFFFFF';
+
+  constructor(p5, args) {
+    super(p5, args);
+
+    this._color = args.color || this._color;
+  }
+
+  get fillColor() { return this._color; }
   get needPower() { return true; }
   get layer() { return this.layers[0]; }
 
@@ -38,5 +49,5 @@ export default class Star extends StarBehavior {
   includes(mouseX, mouseY) { return this.distance(mouseX, mouseY) <= STAR_RADIUS; }
   distance(...args) { return calcDistance(this, ...args); }
 
-  buildLayers() { return [new StarLayer(this)]; }
+  buildLayers() { return [new StarLayer(this, this.fillColor)]; }
 }

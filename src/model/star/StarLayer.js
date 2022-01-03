@@ -7,11 +7,12 @@ const MAX_SIZE = 225;
 const MIN_SIZE = 25;
 
 export class StarLayer extends P5Layer {
+  _color = '#FFFFFF';
   _size = 0;
   _diff = 0;
   _waitFrames = 0;
 
-  constructor(p5, order) {
+  constructor(p5, color, order) {
     super(
       p5,
       { width: MAX_SIZE, height: MAX_SIZE },
@@ -19,9 +20,11 @@ export class StarLayer extends P5Layer {
       order,
     );
 
+    this._color = color;
     this._recalculate();
   }
 
+  get fillColor() { return this._color; }
   get size() { return this._size; }
   get diff() { return this._diff; }
   get waitFrames() { return this._waitFrames };
@@ -39,7 +42,7 @@ export class StarLayer extends P5Layer {
       return;
     }
 
-    this.fill(255);
+    this.fill(this.fillColor);
     this.noStroke();
 
     if (this.size <= 0) {

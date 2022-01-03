@@ -16,3 +16,11 @@ export const ROMAN_NUMBER_GRAPHIC_SIZE = 48;
 export const YUIKA_RADIUS = 300;
 export const YUIKA_FACE_RADIUS = 260;
 export const YUIKA_FACE_INNER_CIRCLE_RADIUS = 35;
+
+export const KIRIKO_COLOR = '#D9F2FF';
+export const KOGANE_COLOR = '#F84CAD';
+export const MAMIMI_COLOR = '#A846FB';
+export const SAKUYA_COLOR = '#006047';
+export const YUIKA_COLOR = '#3B91C4';
+
+export const LANTICA_COLORS = [KIRIKO_COLOR, KOGANE_COLOR, MAMIMI_COLOR, SAKUYA_COLOR, YUIKA_COLOR];
