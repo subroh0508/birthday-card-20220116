@@ -32,6 +32,8 @@ export default class Yuika extends ClockBehavior {
     );
   }
 
+  get needPower() { return true; }
+
   get parts() { return this._parts; }
 
   get handle() { return this.parts[0]; }

@@ -9,6 +9,7 @@ import Mamimi from './model/lantica/Mamimi/index';
 import Sakuya from './model/lantica/Sakuya/index';
 import Yuika from './model/lantica/Yuika/index';
 import { RotateDirection } from './model/mixins/Rotatable';
+import Star from './model/star';
 
 const CanvasBehavior = compose(Engageable)(P5Controller);
 
@@ -30,6 +31,7 @@ export class Canvas extends CanvasBehavior {
       new Kogane(p5, { translate: { x: 200, y: 92 }, direction: RotateDirection.LEFT }),
       new Mamimi(p5, { translate: { x: 300, y: 250 }, direction: RotateDirection.LEFT }),
       new Kiriko(p5, { translate: { x: 350, y: 92 }, direction: RotateDirection.RIGHT }),
+      new Star(p5, { translate: { x: 350, y: 92 }}),
     ];
     this.umbrellas = umbrellas.map((umbrella) => new Umbrella(p5, umbrella));
   }
@@ -43,7 +45,7 @@ export class Canvas extends CanvasBehavior {
 
   draw() {
     this.target.forEach(t => {
-      if (t instanceof Yuika) {
+      if (t.needPower) {
         t.draw(this.isRotatingAll);
         return;
       }

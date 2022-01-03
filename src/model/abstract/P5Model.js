@@ -9,6 +9,7 @@ export class P5Model {
   }
 
   get layers() { return this._layers; }
+  get needPower() { return false; }
 
   setup() {
     const layers = this.buildLayers();
@@ -22,11 +23,8 @@ export class P5Model {
     this.pop();
   }
 
-  drawLayers() {
-    this.layers.forEach(layer => this.image(layer, -layer.origin.x, -layer.origin.y));
-  }
+  drawLayers() { this.layers.forEach(layer => this.image(layer, -layer.origin.x, -layer.origin.y)); }
 
   includes(_x, _y) { return false; }
-
   buildLayers() { return []; }
 }

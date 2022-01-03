@@ -2,6 +2,8 @@ import p5 from 'p5';
 import { Canvas } from './Canvas';
 import { RotateDirection } from './model/mixins/Rotatable';
 
+const background = '#853998';
+
 const sketch = (p) => {
   const canvas = new Canvas(
     p,
@@ -22,7 +24,7 @@ const sketch = (p) => {
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    p.background(100);
+    p.background(0);
     p.frameRate(30);
     canvas.setup();
   };
@@ -32,7 +34,7 @@ const sketch = (p) => {
   };
 
   p.draw = () => {
-    p.background(100);
+    p.background(0);
     canvas.draw();
   }
 
