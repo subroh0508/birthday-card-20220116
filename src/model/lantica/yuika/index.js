@@ -6,10 +6,10 @@ import { ClockHandle } from './ClockHandle';
 import { ClockCover } from './ClockCover';
 import { ClockFace } from './ClockFace';
 import { YUIKA_RADIUS } from '../constants';
-import { ClockFaceBlurLayer } from './ClockFaceLayers';
 import { ClockShortHandLayer } from './ClockHandLayers';
 import { ClockLongHandLayer } from './ClockHandLayers';
 import { ClockSecondHandLayer } from './ClockHandLayers';
+import { ClockBlurLayer } from './ClockBlurLayer';
 
 const ClockBehavior = compose(Translatable)(P5Model);
 
@@ -60,7 +60,7 @@ export default class Yuika extends ClockBehavior {
       new ClockShortHandLayer(this, 0),
       new ClockLongHandLayer(this, 1),
       new ClockSecondHandLayer(this, 2),
-      new ClockFaceBlurLayer(this, 3),
+      new ClockBlurLayer(this, 3),
     ];
   }
 
@@ -92,7 +92,7 @@ export default class Yuika extends ClockBehavior {
   _drawBlur(hasPower) {
     this.push();
     this.translate(this.translateX, this.translateY);
-    this.blur.next(hasPower);
+    this.blur.draw(hasPower);
     this.image(this.blur, -this.blur.origin.x, -this.blur.origin.y);
     this.pop();
   }
