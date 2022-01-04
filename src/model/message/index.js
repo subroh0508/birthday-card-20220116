@@ -73,6 +73,7 @@ class MessageLayer extends P5Layer {
   get displayMessage() { return _sliceMessage(this.message, this.row, this.column); }
 
   next(hasPower) {
+    this.clear();
     hasPower ? this._increase() : this._decrease();
 
     this.draw();
@@ -103,6 +104,7 @@ class MessageLayer extends P5Layer {
   }
 
   _decrease() {
+    console.log(this.column, this.row);
     if (this.column === 0) {
       if (this.row === 0) {
         return;
