@@ -36,7 +36,7 @@ export class Canvas extends CanvasBehavior {
       new Kogane(p5, { translate: { x: 250, y: 650 }, direction: RotateDirection.LEFT }),
       new Mamimi(p5, { translate: { x: 400, y: 650 }, direction: RotateDirection.LEFT }),
       new Kiriko(p5, { translate: { x: 550, y: 650 }, direction: RotateDirection.RIGHT }),
-      new Message(p5, { translate: { x: 550, y: 850 } }),
+      new Message(p5, { translate: { x: 100, y: 850 } }),
       ...Star.effects(p5, Canvas.Width, Canvas.Height),
     ];
     //this.umbrellas = umbrellas.map((umbrella) => new Umbrella(p5, umbrella));
