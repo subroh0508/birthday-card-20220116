@@ -13,13 +13,11 @@ const YUIKA_CLOCK_FACE_COLOR = '#DEE0D5';
 const YUIKA_CLOCK_DIAL_COLOR = '#D0A891';
 
 export class ClockFaceLayer extends ThemedLayer {
+  static get SIZE() { return { width: YUIKA_RADIUS * 2, height: YUIKA_RADIUS * 2 }; }
+  static get ORIGIN() { return { x: YUIKA_RADIUS, y: YUIKA_RADIUS }; }
+
   constructor(p5, order) {
-    super(
-      p5,
-      { width: YUIKA_RADIUS * 2, height: YUIKA_RADIUS * 2 },
-      { x: YUIKA_RADIUS, y: YUIKA_RADIUS },
-      order,
-    );
+    super(p5, ClockFaceLayer.SIZE, ClockFaceLayer.ORIGIN, order);
   }
 
   draw() {

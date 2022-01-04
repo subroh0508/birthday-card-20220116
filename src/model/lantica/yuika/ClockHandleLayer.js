@@ -10,13 +10,11 @@ const YUIKA_CLOCK_HANDLE_WIDTH = ROMAN_NUMBER_GRAPHIC_SIZE + 6;
 const YUIKA_RING_POSITION_Y = 120;
 
 export class ClockHandleLayer extends ThemedLayer {
+  static get SIZE() { return { width: YUIKA_RING_RADIUS * 2, height: YUIKA_RING_RADIUS + YUIKA_RING_POSITION_Y }; }
+  static get ORIGIN() { return { x: YUIKA_RING_RADIUS, y: YUIKA_RING_RADIUS }; }
+
   constructor(p5, order) {
-    super(
-      p5,
-      { width: YUIKA_RING_RADIUS * 2, height: YUIKA_RING_RADIUS + YUIKA_RING_POSITION_Y },
-      { x: YUIKA_RING_RADIUS, y: YUIKA_RING_RADIUS },
-      order,
-    );
+    super(p5, ClockHandleLayer.SIZE, ClockHandleLayer.ORIGIN, order);
   }
 
   get translateY() { return YUIKA_RADIUS + YUIKA_RING_POSITION_Y; }

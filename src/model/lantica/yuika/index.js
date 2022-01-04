@@ -9,7 +9,7 @@ import { YUIKA_RADIUS } from '../constants';
 import { ClockShortHandLayer } from './ClockHandLayers';
 import { ClockLongHandLayer } from './ClockHandLayers';
 import { ClockSecondHandLayer } from './ClockHandLayers';
-import { ClockBlurLayer } from './ClockBlurLayer';
+import { ClockFaceBlurLayer } from './ClockBlurLayers';
 
 const ClockBehavior = compose(Translatable)(P5Model);
 
@@ -60,7 +60,7 @@ export default class Yuika extends ClockBehavior {
       new ClockShortHandLayer(this, 0),
       new ClockLongHandLayer(this, 1),
       new ClockSecondHandLayer(this, 2),
-      new ClockBlurLayer(this, 3),
+      new ClockFaceBlurLayer(this, 3),
     ];
   }
 

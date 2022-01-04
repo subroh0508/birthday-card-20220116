@@ -4,7 +4,7 @@ import { YUIKA_FACE_RADIUS } from '../constants';
 const MIN_ALPHA = 150;
 const MAX_ALPHA = 255;
 
-export class ClockBlurLayer extends P5Layer {
+export class ClockFaceBlurLayer extends P5Layer {
   _blur = MIN_ALPHA;
 
   constructor(p5, order) {

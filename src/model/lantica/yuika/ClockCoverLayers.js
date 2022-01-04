@@ -15,13 +15,11 @@ const YUIKA_COVER_SURFACE_WIDTH = YUIKA_RADIUS * 2 - 20;
 const YUIKA_COVER_SURFACE_HEIGHT = 100;
 
 export class ClockCoverFrameLayer extends ThemedLayer {
+  static get SIZE() { return { width: YUIKA_RADIUS * 2, height: YUIKA_COVER_HEIGHT + YUIKA_COVER_DEPTH }; }
+  static get ORIGIN() { return { x: YUIKA_RADIUS, y: YUIKA_COVER_HEIGHT / 2 }; }
+
   constructor(p5, order) {
-    super(
-      p5,
-      { width: YUIKA_RADIUS * 2, height: YUIKA_COVER_HEIGHT + YUIKA_COVER_DEPTH },
-      { x: YUIKA_RADIUS, y: YUIKA_COVER_HEIGHT / 2 },
-      order,
-    );
+    super(p5, ClockCoverFrameLayer.SIZE, ClockCoverFrameLayer.ORIGIN, order);
   }
 
   get translateY() { return -YUIKA_COVER_HINGE_POSITION_Y; }
@@ -53,13 +51,11 @@ export class ClockCoverFrameLayer extends ThemedLayer {
 }
 
 export class ClockCoverHingeLayer extends ThemedLayer {
+  static get SIZE() { return { width: YUIKA_COVER_HINGE_WIDTH, height: YUIKA_COVER_HINGE_HEIGHT }; }
+  static get ORIGIN() { return { x: YUIKA_COVER_HINGE_WIDTH / 2, y: 0 }; }
+
   constructor(p5, order) {
-    super(
-      p5,
-      { width: YUIKA_COVER_HINGE_WIDTH, height: YUIKA_COVER_HINGE_HEIGHT },
-      { x: YUIKA_COVER_HINGE_WIDTH / 2, y: 0 },
-      order,
-    );
+    super(p5, ClockCoverHingeLayer.SIZE, ClockCoverHingeLayer.ORIGIN, order);
   }
 
   get translateY() { return YUIKA_COVER_HINGE_HEIGHT; }
@@ -90,13 +86,11 @@ export class ClockCoverHingeLayer extends ThemedLayer {
 }
 
 export class ClockCoverSurfaceLayer extends ThemedLayer {
+  static get SIZE() { return { width: YUIKA_COVER_SURFACE_WIDTH, height: YUIKA_COVER_SURFACE_HEIGHT }; }
+  static get ORIGIN() { return { x: YUIKA_COVER_SURFACE_WIDTH / 2, y: YUIKA_COVER_SURFACE_HEIGHT / 2 - 10 }; }
+
   constructor(p5, order) {
-    super(
-      p5,
-      { width: YUIKA_COVER_SURFACE_WIDTH, height: YUIKA_COVER_SURFACE_HEIGHT },
-      { x: YUIKA_COVER_SURFACE_WIDTH / 2, y: YUIKA_COVER_SURFACE_HEIGHT / 2 - 10 },
-      order,
-    );
+    super(p5, ClockCoverSurfaceLayer.SIZE, ClockCoverSurfaceLayer.ORIGIN, order);
   }
 
   get translateY() { return -YUIKA_COVER_HINGE_POSITION_Y; }

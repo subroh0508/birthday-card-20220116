@@ -13,15 +13,11 @@ const YUIKA_SECOND_HAND_LENGTH = YUIKA_LONG_HAND_LENGTH + YUIKA_FACE_INNER_CIRCL
 const YUIKA_SECOND_HAND_WIDTH = 14;
 
 export class ClockLongHandLayer extends ThemedLayer {
-  constructor(p5, order) {
-    const height = YUIKA_LONG_HAND_WIDTH + 20;
+  static get SIZE() { return { width: YUIKA_LONG_HAND_LENGTH + 30, height: YUIKA_LONG_HAND_WIDTH + 20 }; }
+  static get ORIGIN() { return { x: 10, y: (YUIKA_LONG_HAND_WIDTH + 20) / 2 }; }
 
-    super(
-      p5,
-      { width: YUIKA_LONG_HAND_LENGTH + 30, height },
-      { x: 10, y: height / 2 },
-      order,
-    );
+  constructor(p5, order) {
+    super(p5, ClockLongHandLayer.SIZE, ClockLongHandLayer.ORIGIN, order);
   }
 
   draw() {
@@ -74,15 +70,11 @@ export class ClockLongHandLayer extends ThemedLayer {
 }
 
 export class ClockShortHandLayer extends ThemedLayer {
-  constructor(p5, order) {
-    const height = YUIKA_SHORT_HAND_WIDTH + 20;
+  static get SIZE() { return { width: YUIKA_SHORT_HAND_LENGTH + 30, height: YUIKA_SHORT_HAND_WIDTH + 20 }; }
+  static get ORIGIN() { return { x: 0, y: (YUIKA_SHORT_HAND_WIDTH + 20) / 2 }; }
 
-    super(
-      p5,
-      { width: YUIKA_SHORT_HAND_LENGTH + 30, height },
-      { x: 0, y: height / 2 },
-      order,
-    );
+  constructor(p5, order) {
+    super(p5, ClockShortHandLayer.SIZE, ClockShortHandLayer.ORIGIN, order);
   }
 
   draw() {
@@ -130,13 +122,11 @@ export class ClockShortHandLayer extends ThemedLayer {
 }
 
 export class ClockSecondHandLayer extends ThemedLayer {
+  static get SIZE() { return { width: YUIKA_SECOND_HAND_LENGTH, height: YUIKA_SECOND_HAND_WIDTH }; }
+  static get ORIGIN() { return { x: YUIKA_FACE_INNER_CIRCLE_RADIUS, y: YUIKA_LONG_HAND_WIDTH / 2 }; }
+
   constructor(p5, order) {
-    super(
-      p5,
-      { width: YUIKA_SECOND_HAND_LENGTH, height: YUIKA_SECOND_HAND_WIDTH },
-      { x: YUIKA_FACE_INNER_CIRCLE_RADIUS, y: YUIKA_LONG_HAND_WIDTH / 2 },
-      order,
-    );
+    super(p5, ClockSecondHandLayer.SIZE, ClockSecondHandLayer.ORIGIN, order);
   }
 
   draw() {
