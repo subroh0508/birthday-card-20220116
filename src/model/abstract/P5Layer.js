@@ -2,6 +2,7 @@ import { Element, Graphics, P2D } from 'p5';
 
 export class P5Layer {
   _order = 0;
+  _size = { width: 0, height: 0 };
   _origin = { x: 0, y: 0 };
 
   constructor(
@@ -11,6 +12,7 @@ export class P5Layer {
     order = 0,
   ) {
     this._order = order;
+    this._size = size;
     this._origin = origin;
 
     Object.setPrototypeOf(P5Layer.prototype, Object.create(Element.prototype));
@@ -18,6 +20,7 @@ export class P5Layer {
   }
 
   get order() { return this._order; }
+  get size() { return this._size; }
   get origin() { return this._origin; }
 
   draw() {}
