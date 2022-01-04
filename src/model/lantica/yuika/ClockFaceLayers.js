@@ -219,3 +219,39 @@ export class ClockDialLayer extends ThemedLayer {
     this.rect(-14, ROMAN_NUMBER_GRAPHIC_SIZE - 2, 5, 2);
   }
 }
+
+const MIN_ALPHA = 150;
+const MAX_ALPHA = 255;
+
+export class ClockFaceBlurLayer extends P5Layer {
+  _blur = MIN_ALPHA;
+
+  constructor(p5, order) {
+    super(
+      p5,
+      { width: YUIKA_FACE_RADIUS * 2, height: YUIKA_FACE_RADIUS * 2 },
+      { x: YUIKA_FACE_RADIUS, y: YUIKA_FACE_RADIUS },
+      order,
+    );
+  }
+
+  get blur() { return this._blur; }
+
+  lighten() { if (this.blur < MAX_ALPHA) this._blur += 10; }
+  darken() { if (this.blur > MIN_ALPHA) this._blur -= 10; }
+
+  next(hasPower) {
+    hasPower ? this.lighten() : this.darken();
+
+    this.draw();
+  }
+
+  draw() {
+    this.fill(0);
+    this.noStroke();
+    this.ellipse(0, 0, YUIKA_FACE_RADIUS * 2);
+    this.erase(this.blur);
+    this.ellipse(0, 0, YUIKA_FACE_RADIUS * 2 + 2);
+    this.noErase();
+  }
+}
