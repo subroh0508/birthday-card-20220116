@@ -2,6 +2,11 @@ body {
   font-family: 'sans-serif';
 }
 
+#select-message {
+  display: inline-block;
+  padding: 8px;
+}
+
 .dropdown-content {
   display: none;
   position: absolute;
