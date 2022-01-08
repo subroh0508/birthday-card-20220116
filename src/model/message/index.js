@@ -32,22 +32,30 @@ const MESSAGE_WIDTH = 1000;
 const MESSAGE_HEIGHT = 250;
 
 export default class Message extends MessageBehavior {
-  _messageType = 0;
+  _getMessageType = () => 0;
   _row = 0;
   _column = 0;
 
+  constructor(p5, args) {
+    super(p5, args);
+
+    this._getMessageType = args.getMessageType;
+  }
+
   get needPower() { return true; }
   get layer() { return this.layers[0]; }
+  get getMessageType() { return this._getMessageType; }
 
   draw(hasPower) {
     this.push();
     this.translate(this.translateX, this.translateY);
+    this.layer.message = MESSAGES[this.getMessageType()];
     this.layer.next(hasPower);
     this.drawLayers();
     this.pop();
   }
 
-  buildLayers() { return [new MessageLayer(this, MESSAGES[2])]; }
+  buildLayers() { return [new MessageLayer(this, MESSAGES[this.getMessageType()])]; }
 }
 
 class MessageLayer extends P5Layer {
@@ -68,7 +76,17 @@ class MessageLayer extends P5Layer {
 
   get row() { return this._row; }
   get column() { return this._column; }
+
   get message() { return this._message; }
+  set message(message) {
+    if (this._message === message) {
+      return;
+    }
+
+    this._message = message;
+    this._reset();
+  }
+
   get nowSentence() { return this.message[this.row]; }
   get displayMessage() { return _sliceMessage(this.message, this.row, this.column); }
 
@@ -104,7 +122,6 @@ class MessageLayer extends P5Layer {
   }
 
   _decrease() {
-    console.log(this.column, this.row);
     if (this.column === 0) {
       if (this.row === 0) {
         return;
@@ -116,6 +133,11 @@ class MessageLayer extends P5Layer {
     }
 
     this._column -= 1;
+  }
+
+  _reset() {
+    this._row = 0;
+    this._column = 0;
   }
 }
 

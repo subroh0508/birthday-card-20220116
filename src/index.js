@@ -1,16 +1,12 @@
 import p5 from 'p5';
 import { Canvas } from './Canvas';
-import { RotateDirection } from './model/mixins/Rotatable';
 
 const background = '#853998';
 
+let messageType = 0;
+
 const sketch = (p) => {
-  const canvas = new Canvas(
-    p,
-    [
-      { radius: 100, boneCount: 8, color: '#FFFFFF', translate: { x: 100, y: 400 }, direction: RotateDirection.LEFT },
-    ],
-  );
+  const canvas = new Canvas(p, () => messageType);
 
   p.preload = () => {
   };
@@ -44,4 +40,11 @@ const sketch = (p) => {
   }
 };
 
-new p5(sketch, document.body);
+window.onChangeMessageType = (type) => {
+  messageType = type;
+  document.getElementById('select-message-button').innerText = `選択中: メッセージ${type + 1}`;
+};
+window.onload = () => {
+  new p5(sketch, document.getElementById('canvas'));
+  window.onChangeMessageType(0);
+};

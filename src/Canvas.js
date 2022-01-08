@@ -2,7 +2,6 @@ import compose from 'lodash/fp/compose';
 import { P5Controller } from './controller/P5Controller';
 import { Engageable } from './controller/mixins/Engageable';
 import { RotateDirection } from './model/mixins/Rotatable';
-import Umbrella from './model/Umbrella/index';
 import Kiriko from './model/lantica/kiriko/index';
 import Kogane from './model/lantica/Kogane/index';
 import Mamimi from './model/lantica/Mamimi/index';
@@ -25,7 +24,7 @@ export class Canvas extends CanvasBehavior {
 
   constructor(
     p5,
-    umbrellas = [],
+    getMessageType = () => 0,
   ) {
     super(p5);
 
@@ -36,10 +35,9 @@ export class Canvas extends CanvasBehavior {
       new Kogane(p5, { translate: { x: 250, y: 650 }, direction: RotateDirection.LEFT }),
       new Mamimi(p5, { translate: { x: 400, y: 650 }, direction: RotateDirection.LEFT }),
       new Kiriko(p5, { translate: { x: 550, y: 650 }, direction: RotateDirection.RIGHT }),
-      new Message(p5, { translate: { x: 100, y: 850 } }),
+      new Message(p5, { translate: { x: 100, y: 850 }, getMessageType }),
       ...Star.effects(p5, Canvas.Width, Canvas.Height),
     ];
-    //this.umbrellas = umbrellas.map((umbrella) => new Umbrella(p5, umbrella));
   }
 
   get target() {

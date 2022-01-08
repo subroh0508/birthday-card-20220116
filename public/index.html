@@ -6,11 +6,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
-    <style>
-      body { font-family: 'Pinyon Script', 'sans-serif'; }
-    </style>
+    <link rel="stylesheet" href="./styles.css" type="text/css">
     <script type="text/javascript" src="./bundle.js"></script>
   </head>
   <body>
+    <div id="introduction">
+
+    </div>
+    <div id="controller">
+      <div id="select-message">
+        <button id="select-message-button" class="dropdown">メッセージを選択</button>
+        <div class="dropdown-content">
+          <div onclick="onChangeMessageType(0)">メッセージ1</div>
+          <div onclick="onChangeMessageType(1)">メッセージ2</div>
+          <div onclick="onChangeMessageType(2)">メッセージ3</div>
+        </div>
+      </div>
+    </div>
+    <div id="canvas"></div>
   </body>
 </html>
