@@ -10,6 +10,7 @@ body {
 .dropdown-content {
   display: none;
   position: absolute;
+  color: #000;
   background-color: #f1f1f1;
   min-width: 160px;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
@@ -25,5 +26,6 @@ body {
 }
 
 #select-message:hover .dropdown {
-  background-color: #3e8e41;
+  color: #FFF;
+  background-color: #853998;
 }
