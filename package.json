@@ -14,6 +14,7 @@
     "dev": "node ./build --dev --serve"
   },
   "dependencies": {
+    "canvas-capture": "^1.0.10",
     "lodash": "^4.17.21",
     "p5": "^1.4.0"
   }
