@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css" type="text/css">
+    <script src="./coi-serviceworker.min.js"></script>
     <script type="text/javascript" src="./bundle.js"></script>
   </head>
   <body>
@@ -14,7 +15,15 @@
 
     </div>
     <div id="controller">
-      <div id="select-message">
+      <div class="controller-element">
+        <button id="record-gif" onclick="takeSnapshot()">PNG出力</button>
+      </div>
+
+      <div class="controller-element">
+        <button id="record-mp4" onclick="recordMp4()">MP4出力</button>
+      </div>
+
+      <div id="select-message" class="controller-element">
         <button id="select-message-button" class="dropdown">メッセージを選択</button>
         <div class="dropdown-content">
           <div onclick="onChangeMessageType(0)">メッセージ1</div>
