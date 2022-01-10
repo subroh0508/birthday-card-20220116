@@ -1,20 +1,23 @@
 import compose from 'lodash/fp/compose';
 import { P5Layer } from '../../abstract/P5Layer';
 import { LanticaTheme } from '../theme/LanticaTheme';
+import { TWO_PI } from '../../../utilities';
 
 const ThemedLayer = compose(LanticaTheme)(P5Layer);
 
 class ClockHandLayer extends ThemedLayer {
   _params = {};
+  _angle = 0;
 
   constructor(p5, size, origin, order, params) {
     super(p5, size, origin, order);
 
     this._params = params;
+    this._angle = Math.random() * TWO_PI;
   }
 
   get params() { return this._params; }
-  get angle() { return 0; }
+  get angle() { return this._angle; }
 
   draw() {
     this.stroke(this.light);
@@ -67,8 +70,6 @@ export class LongHandLayer extends ClockHandLayer {
       },
     );
   }
-
-  get angle() { return Math.PI / 3; }
 }
 
 export class ShortHandLayer extends ClockHandLayer {

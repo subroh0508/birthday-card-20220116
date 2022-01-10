@@ -2,21 +2,23 @@ import compose from 'lodash/fp/compose';
 import { P5Layer } from '../../abstract/P5Layer';
 import { LanticaTheme } from '../theme/LanticaTheme';
 import { degToRad } from '../../../utilities';
-import { KOGANE_RADIUS } from "../constants";
+import { KOGANE_RADIUS } from '../constants';
 
 const ThemedLayer = compose(LanticaTheme)(P5Layer);
 
 class ClockHandLayer extends ThemedLayer {
   _length = 0;
+  _angle = 0
 
   constructor(p5, size, origin, order, length) {
     super(p5, size, origin, order);
 
     this._length = length;
+    this._angle = Math.random() * Math.PI - Math.PI / 2;
   }
 
   get length() { return this._length; }
-  get angle() { return 0; }
+  get angle() { return this._angle; }
 
   draw() {
     this.stroke(this.light);
@@ -58,8 +60,6 @@ export class LongHandLayer extends ClockHandLayer {
       KOGANE_RADIUS * 1.5,
     );
   }
-
-  get angle() { return Math.PI / 3; }
 }
 
 export class ShortHandLayer extends ClockHandLayer {
