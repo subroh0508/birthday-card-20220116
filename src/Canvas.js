@@ -19,8 +19,7 @@ export class Canvas extends CanvasBehavior {
   static get Width() { return 1729; }
   static get Height() { return 1045; }
 
-  gears = [];
-  umbrellas = [];
+  _target = [];
 
   constructor(
     p5,
@@ -28,7 +27,7 @@ export class Canvas extends CanvasBehavior {
   ) {
     super(p5);
 
-    this.gears = [
+    this._target = [
       new Yuika(p5, { translate: { x: 1400, y: 550 } }),
       ...LanticaGear.build(p5, GEAR_BUILDING_AREA),
       new Sakuya(p5, { translate: { x: 100, y: 650 }, direction: RotateDirection.RIGHT }),
@@ -40,12 +39,8 @@ export class Canvas extends CanvasBehavior {
     ];
   }
 
-  get target() {
-    return [
-      ...this.gears,
-      ...this.umbrellas,
-    ];
-  }
+  get target() { return this._target; }
+  get targetWithClockHands() { return this._target.filter(t => t instanceof LanticaGear); }
 
   draw() {
     this.target.forEach(t => {
@@ -56,5 +51,7 @@ export class Canvas extends CanvasBehavior {
 
       t.draw();
     });
+
+    this.targetWithClockHands.forEach(t => t.drawClockHands());
   }
 }

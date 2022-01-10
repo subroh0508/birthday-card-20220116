@@ -52,7 +52,9 @@ export default class LanticaGear extends Gear {
       this.image(gear, -gear.origin.x, -gear.origin.y);
     });
     this.pop();
+  }
 
+  drawClockHands() {
     this.clockHands.forEach(hand => {
       this.push();
       this.translate(this.translateX, this.translateY);
