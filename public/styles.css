@@ -21,11 +21,11 @@ body {
   background-color: #ddd;
 }
 
-#select-message:hover .dropdown-content {
-  display: block;
-}
-
-#select-message:hover .dropdown {
+.button:hover {
   color: #FFF;
   background-color: #853998;
+}
+
+#select-message:hover .dropdown-content {
+  display: block;
 }
