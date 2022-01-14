@@ -12,7 +12,8 @@ _「回せ、錆びついた運命の鍵を」_
 
 ## デモ
 
-![demo](images/demo.mp4)
+https://user-images.githubusercontent.com/8080435/149530573-95fea795-a383-41ba-9b6c-1b6dc68dda1e.mp4
+
 
 ### 操作方法
 
