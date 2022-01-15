@@ -31,3 +31,11 @@ https://user-images.githubusercontent.com/8080435/149530573-95fea795-a383-41ba-9
 
 - PC、およびChromeでのアクセスを推奨します。スマホでは殆どまともに動きません＞＜
 - キャンバスがディスプレイに収まらない場合は、ブラウザの縮小表示機能の使用をおすすめします。
+- MP4の出力には数分〜5分程度の時間を要します。気長に待ちましょう。
+
+## 使用ライブラリ・サービス
+
+- [p5.js](https://p5js.org/) : デザイン描画全般
+- [canvas-capture](https://github.com/amandaghassaei/canvas-capture) : PNG・MP4出力
+- [esbuild](https://esbuild.github.io/) : バンドラー
+- [Vercel](https://vercel.com/) : ホスティング
